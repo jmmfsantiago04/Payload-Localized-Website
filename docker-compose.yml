@@ -9,23 +9,9 @@ services:
       - pnpm_store:/home/node/.pnpm-store 
     working_dir: /home/node/app/
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
-    depends_on:
-      - mongo
     env_file:
       - .env
 
-  mongo:
-    image: mongo:latest
-    ports:
-      - '27017:27017'
-    command:
-      - --storageEngine=wiredTiger
-    volumes:
-      - data:/data/db
-    logging:
-      driver: none
-
 volumes:
-  data:
   node_modules:
   pnpm_store: 

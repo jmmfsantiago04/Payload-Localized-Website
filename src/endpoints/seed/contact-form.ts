@@ -1,6 +1,6 @@
 import type { Form } from '@/payload-types'
 
-export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
+export const contactForm = (locale: 'en' | 'ko'): Partial<Form> => ({
   confirmationMessage: {
     root: {
       type: 'root',
@@ -17,7 +17,7 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
               text:
                 locale === 'en'
                   ? 'The contact form has been submitted successfully.'
-                  : 'İletişim formu başarıyla gönderildi.',
+                  : '연락처 양식이 성공적으로 제출되었습니다.',
               version: 1,
             },
           ],
@@ -58,7 +58,7 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
                   text:
                     locale === 'en'
                       ? 'Your contact form submission was successfully received.\n\n{{full-name}} - {{email}} - {{phone}}\n\n{{message}}'
-                      : 'İletişim formu gönderiminiz başarıyla alındı.\n\n{{full-name}} - {{email}} - {{phone}}\n\n{{message}}',
+                      : '귀하의 연락처 양식이 성공적으로 접수되었습니다.\n\n{{full-name}} - {{email}} - {{phone}}\n\n{{message}}',
                   version: 1,
                 },
               ],
@@ -75,7 +75,7 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
           version: 1,
         },
       },
-      subject: locale === 'en' ? "You've received a new message." : 'Yeni bir mesaj aldınız.',
+      subject: locale === 'en' ? "You've received a new message." : '새로운 메시지가 도착했습니다.',
     },
   ],
   fields: [
@@ -83,7 +83,7 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
       name: 'full-name',
       blockName: 'full-name',
       blockType: 'text',
-      label: locale === 'en' ? 'Full Name' : 'İsim Soyisim',
+      label: locale === 'en' ? 'Full Name' : '성명',
       required: true,
       width: 100,
     },
@@ -99,7 +99,7 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
       name: 'phone',
       blockName: 'phone',
       blockType: 'number',
-      label: locale === 'en' ? 'Phone' : 'Telefon',
+      label: locale === 'en' ? 'Phone' : '전화번호',
       required: false,
       width: 100,
     },
@@ -107,13 +107,13 @@ export const contactForm = (locale: 'en' | 'tr'): Partial<Form> => ({
       name: 'message',
       blockName: 'message',
       blockType: 'textarea',
-      label: locale === 'en' ? 'Message' : 'Mesaj',
+      label: locale === 'en' ? 'Message' : '메시지',
       required: true,
       width: 100,
     },
   ],
   redirect: undefined,
-  submitButtonLabel: locale === 'en' ? 'Submit' : 'Gönder',
-  title: locale === 'en' ? 'Contact Form' : 'İletişim Formu',
+  submitButtonLabel: locale === 'en' ? 'Submit' : '제출',
+  title: locale === 'en' ? 'Contact Form' : '연락처 양식',
   updatedAt: '2023-01-12T21:47:41.374Z',
 })

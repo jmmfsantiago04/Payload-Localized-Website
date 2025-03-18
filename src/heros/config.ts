@@ -16,57 +16,65 @@ export const hero: Field = {
     {
       name: 'type',
       type: 'select',
-      defaultValue: 'lowImpact',
-      label: 'Type',
+      defaultValue: 'mediumImpact',
       options: [
-        {
-          label: 'None',
-          value: 'none',
-        },
-        {
-          label: 'High Impact',
-          value: 'highImpact',
-        },
-        {
-          label: 'Medium Impact',
-          value: 'mediumImpact',
-        },
-        {
-          label: 'Low Impact',
-          value: 'lowImpact',
-        },
+        { label: 'None', value: 'none' },
+        { label: 'High Impact', value: 'highImpact' },
+        { label: 'Medium Impact', value: 'mediumImpact' },
+        { label: 'Low Impact', value: 'lowImpact' },
       ],
-      required: true,
     },
     {
-      name: 'richText',
-      type: 'richText',
+      name: 'title',
+      type: 'text',
+      required: false,
       localized: true,
-      editor: lexicalEditor({
-        features: ({ rootFeatures }) => {
-          return [
-            ...rootFeatures,
-            HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-            FixedToolbarFeature(),
-            InlineToolbarFeature(),
-          ]
-        },
-      }),
-      label: false,
     },
-    linkGroup({
-      overrides: {
-        maxRows: 2,
+    {
+      name: 'highlightedText',
+      type: 'text',
+      required: false,
+      localized: true,
+      admin: {
+        description: 'Text to highlight in Korean version (e.g., "미국 서부")',
+        condition: (data) => data?.type === 'mediumImpact',
       },
-    }),
+    },
+    {
+      name: 'content',
+      type: 'textarea',
+      required: false,
+      localized: true,
+    },
+    {
+      name: 'secondaryContent',
+      type: 'textarea',
+      required: false,
+      localized: true,
+    },
+    {
+      name: 'buttons',
+      type: 'array',
+      localized: true,
+      fields: [
+        {
+          name: 'label',
+          type: 'text',
+          required: true,
+          localized: true,
+        },
+        {
+          name: 'link',
+          type: 'text',
+          required: true,
+        },
+      ],
+    },
     {
       name: 'media',
       type: 'upload',
-      admin: {
-        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
-      },
       relationTo: 'media',
-      required: true,
+      required: false,
     },
   ],
   label: false,
