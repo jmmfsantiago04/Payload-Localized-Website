@@ -9,67 +9,72 @@ import {
 
 import { link } from '@/fields/link'
 
-const columnFields: Field[] = [
+const contentFields: Field[] = [
   {
-    name: 'size',
-    type: 'select',
-    defaultValue: 'full',
-    options: [
+    name: 'title',
+    type: 'text',
+    required: false,
+    localized: true,
+  },
+  {
+    name: 'content',
+    type: 'textarea',
+    required: false,
+    localized: true,
+  },
+  {
+    name: 'secondaryContent',
+    type: 'textarea',
+    required: false,
+    localized: true,
+  },
+  {
+    name: 'cards',
+    type: 'array',
+    localized: true,
+    fields: [
       {
-        label: 'One Third',
-        value: 'oneThird',
+        name: 'title',
+        type: 'text',
+        required: false,
+        localized: true,
       },
       {
-        label: 'Half',
-        value: 'half',
-      },
-      {
-        label: 'Two Thirds',
-        value: 'twoThirds',
-      },
-      {
-        label: 'Full',
-        value: 'full',
+        name: 'content',
+        type: 'textarea',
+        required: false,
+        localized: true,
       },
     ],
   },
   {
-    name: 'richText',
-    type: 'richText',
+    name: 'buttons',
+    type: 'array',
     localized: true,
-    editor: lexicalEditor({
-      features: ({ rootFeatures }) => {
-        return [
-          ...rootFeatures,
-          HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
-          FixedToolbarFeature(),
-          InlineToolbarFeature(),
-        ]
+    fields: [
+      {
+        name: 'label',
+        type: 'text',
+        required: true,
+        localized: true,
       },
-    }),
-    label: false,
+      {
+        name: 'link',
+        type: 'text',
+        required: true,
+      },
+    ],
   },
   {
-    name: 'enableLink',
-    type: 'checkbox',
+    name: 'media',
+    type: 'upload',
+    relationTo: 'media',
+    required: false,
   },
-  link({
-    overrides: {
-      admin: {
-        condition: (_, { enableLink }) => Boolean(enableLink),
-      },
-    },
-  }),
 ]
 
 export const Content: Block = {
   slug: 'content',
   interfaceName: 'ContentBlock',
-  fields: [
-    {
-      name: 'columns',
-      type: 'array',
-      fields: columnFields,
-    },
-  ],
+  fields: contentFields,
 }

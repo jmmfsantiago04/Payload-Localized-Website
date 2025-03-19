@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import type { Media as MediaType } from '@/payload-types';
 import { CMSLink } from '@/components/Link';
 import { Media } from '@/components/Media';
-import RichText from '@/components/RichText';
+import { useLocale } from 'next-intl';
 
 interface HeroProps {
   type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
@@ -17,7 +17,6 @@ interface HeroProps {
     link: string;
   }>;
   media?: MediaType;
-  lang?: string;
 }
 
 export const MediumImpactHero: React.FC<HeroProps> = ({
@@ -26,55 +25,48 @@ export const MediumImpactHero: React.FC<HeroProps> = ({
   secondaryContent,
   buttons,
   media,
-  lang = 'en'
 }) => {
+  const locale = useLocale();
+
   const getTitleContent = () => {
-    if (lang === 'ko' && title) {
-      const parts = title.split('특별');
-      const firstPart = parts[0];
-      const secondPart = parts[1];
+    if (!title) return null;
+
+    if (locale === 'ko') {
+      const words = title.split(' ');
+      const firstTwoWords = words.slice(0, 2).join(' ');
+      const remainingWords = words.slice(2).join(' ');
 
       return (
-        <div className="flex flex-col gap-1">
-          <div className="flex items-start gap-2">
-            <span className="text-[#F6B600]">미국 서부</span>
-            <span>의 감동을 더 쉽게</span>
-          </div>
-          <div>
-            <span>더 특별하게</span>
-          </div>
-          <div>
-            <span>그리고 더 가까이</span>
-          </div>
+        <div className="inline">
+          <span className="text-[#F6B600]">{firstTwoWords}</span>
+          {' '}
+          {remainingWords}
         </div>
       );
-    } else {
-      if (title) {
-        const words = title.split(' ');
-        const lastTwoWords = words.slice(-2).join(' ');
-        const restOfWords = words.slice(0, -2).join(' ');
-
-        return (
-          <div className="flex flex-wrap gap-2">
-            <span>{restOfWords}</span>
-            <span className="text-[#F6B600]">{lastTwoWords}</span>
-          </div>
-        );
-      }
-      return null;
     }
+
+    const words = title.split(' ');
+    const lastTwoWords = words.slice(-2).join(' ');
+    const restOfWords = words.slice(0, -2).join(' ');
+
+    return (
+      <div className="flex flex-wrap gap-1">
+        <span>{restOfWords}</span>
+        <span className="text-[#F6B600]">{lastTwoWords}</span>
+      </div>
+    );
   };
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-white">
-      <div className="relative z-10 flex h-full pt-[3.4375rem] px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 flex h-full pt-[40px] px-4 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-7xl">
-          <div className={`flex flex-col ${lang === 'ko' ? 'space-y-[4.375rem]' : 'space-y-[1.5625rem]'}`}>
-            <div className={`w-full max-w-[47.25rem] ${lang === 'ko' ? 'h-[7rem]' : ''}`}>
+          <div className={`flex flex-col ${locale === 'ko' ? 'space-y-[4.375rem]' : 'space-y-[4.  rem]'}`}>
+            <div className={`w-full ${locale === 'ko' ? 'h-[7rem]' : ''} max-w-[47.25rem]`}>
               <motion.h1
-                className={`text-gray-900 text-[2rem] sm:text-[2.5rem] md:text-[3.25rem] leading-[2.5rem] sm:leading-[3rem] md:leading-[3.5rem] tracking-[0] font-semibold ${lang === 'ko'
+                className={`text-gray-900 text-[2rem] sm:text-[2.5rem] md:text-[3.25rem] leading-[2.5rem] sm:leading-[3rem] md:leading-[3.5rem] tracking-[0] font-semibold ${locale === 'ko'
                   ? 'h-full flex items-center'
-                  : 'flex flex-col gap-1 md:h-[10.5rem] md:gap-2'
+                  : 'flex flex-row items-center gap-1 md:gap-2'
                   }`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -99,7 +91,7 @@ export const MediumImpactHero: React.FC<HeroProps> = ({
                           type="custom"
                           url={button.link}
                           label={button.label}
-                          className="group inline-flex h-[3rem] w-[15.6875rem] items-center justify-between rounded-lg bg-[#1976D2] pl-5 pr-1 text-white transition-all hover:bg-[#1565C0]"
+                          className="group inline-flex h-[3rem] w-[15.6875rem] items-center justify-between rounded-lg bg-[#1976D2] hover:bg-[#1565C0] pl-5 pr-1 text-white transition-all"
                         >
                           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white">
                             <svg
@@ -128,12 +120,18 @@ export const MediumImpactHero: React.FC<HeroProps> = ({
 
               {content && (
                 <motion.div
-                  className="w-full md:h-[3.3125rem] md:w-[22.5625rem] md:ml-auto"
+                  className={`w-full ${locale === 'ko'
+                    ? 'md:w-[35rem]'
+                    : 'md:w-[22.5625rem]'
+                    } md:h-[3.3125rem] md:ml-auto`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                  <p className="flex h-full items-center text-sm sm:text-base font-medium leading-5 sm:leading-6 tracking-[0] text-gray-600">
+                  <p className={`flex h-full items-center ${locale === 'ko'
+                    ? 'text-lg'
+                    : 'text-sm sm:text-base'
+                    } font-medium leading-5 sm:leading-6 tracking-[0] text-gray-600`}>
                     {content}
                   </p>
                 </motion.div>
