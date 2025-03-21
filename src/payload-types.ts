@@ -184,10 +184,11 @@ export interface Page {
         id?: string | null;
         blockType: 'card-labeled';
       }
-    | ContentBlock
+    | OurMissionBlock
     | MediaBlock
     | ContentReviewBlock
     | FormBlock
+    | HowItWorksBlock
   )[];
   meta?: {
     title?: string | null;
@@ -240,9 +241,9 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContentBlock".
+ * via the `definition` "OurMissionBlock".
  */
-export interface ContentBlock {
+export interface OurMissionBlock {
   title?: string | null;
   content?: string | null;
   secondaryContent?: string | null;
@@ -268,7 +269,7 @@ export interface ContentBlock {
   media?: (number | null) | Media;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'content';
+  blockType: 'our-mission';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -506,6 +507,38 @@ export interface Form {
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HowItWorksBlock".
+ */
+export interface HowItWorksBlock {
+  title?: string | null;
+  content?: string | null;
+  secondaryContent?: string | null;
+  cards?:
+    | {
+        title?: string | null;
+        content?:
+          | {
+              text?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  buttons?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  media?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'how-it-works';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -789,10 +822,11 @@ export interface PagesSelect<T extends boolean = true> {
                   };
               id?: T;
             };
-        content?: T | ContentBlockSelect<T>;
+        'our-mission'?: T | OurMissionBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
         'content-review'?: T | ContentReviewBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        'how-it-works'?: T | HowItWorksBlockSelect<T>;
       };
   meta?:
     | T
@@ -810,9 +844,9 @@ export interface PagesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContentBlock_select".
+ * via the `definition` "OurMissionBlock_select".
  */
-export interface ContentBlockSelect<T extends boolean = true> {
+export interface OurMissionBlockSelect<T extends boolean = true> {
   title?: T;
   content?: T;
   secondaryContent?: T;
@@ -883,6 +917,37 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HowItWorksBlock_select".
+ */
+export interface HowItWorksBlockSelect<T extends boolean = true> {
+  title?: T;
+  content?: T;
+  secondaryContent?: T;
+  cards?:
+    | T
+    | {
+        title?: T;
+        content?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  buttons?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+        id?: T;
+      };
+  media?: T;
   id?: T;
   blockName?: T;
 }

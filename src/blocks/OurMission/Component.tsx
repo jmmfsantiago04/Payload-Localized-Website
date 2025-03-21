@@ -34,7 +34,7 @@ type Props = {
   } | number | null
 }
 
-export const OurMissionComp: React.FC<Props> = (props) => {
+export const Component: React.FC<Props> = (props) => {
   const { title, content, secondaryContent, cards, buttons, media } = props
 
   // Function to add line break after "and"

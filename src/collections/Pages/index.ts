@@ -4,7 +4,8 @@ import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { ContentReview } from '../../blocks/ContentReview/config'
 import { CardLabeled } from '../../blocks/CardLabeled/config'
-import { Content } from '../../blocks/Content/config'
+import OurMissionBlock from '../../blocks/OurMission/config'
+import HowItWorksBlock from '../../blocks/HowItWorks/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { hero } from '@/heros/config'
@@ -72,7 +73,7 @@ export const Pages: CollectionConfig = {
               name: 'layout',
               type: 'blocks',
               localized: true,
-              blocks: [CardLabeled, Content, MediaBlock, ContentReview, FormBlock],
+              blocks: [CardLabeled, OurMissionBlock, MediaBlock, ContentReview, FormBlock, HowItWorksBlock],
               required: true,
             },
           ],

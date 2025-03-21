@@ -1,4 +1,4 @@
-import type { Block } from 'payload'
+import type { Block } from 'payload/types'
 
 import {
   FixedToolbarFeature,
@@ -87,3 +87,5 @@ export const ContentReview: Block = {
     singular: 'Content Review',
   },
 }
+
+export default ContentReview

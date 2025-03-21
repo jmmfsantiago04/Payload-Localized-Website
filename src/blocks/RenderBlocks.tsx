@@ -3,9 +3,10 @@ import React, { Fragment } from 'react'
 
 import type { Page } from '@/payload-types'
 
-import { ContentReviewBlock } from '@/blocks/ContentReview/Component'
+import ContentReviewBlock from '@/blocks/ContentReview/Component'
 import { CardLabeledBlock } from '@/blocks/CardLabeled/Component'
-import { OurMissionComp } from './Content/Home/OurMissionComp'
+import { Component as OurMissionComponent } from '@/blocks/OurMission/Component'
+import HowItWorksBlock from '@/blocks/HowItWorks/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { TypedLocale } from 'payload'
@@ -13,7 +14,8 @@ import { TypedLocale } from 'payload'
 const blocks = {
   'content-review': ContentReviewBlock,
   'card-labeled': CardLabeledBlock,
-  content: OurMissionComp,
+  'our-mission': OurMissionComponent,
+  'how-it-works': HowItWorksBlock,
   media: MediaBlock,
   form: FormBlock
 }
