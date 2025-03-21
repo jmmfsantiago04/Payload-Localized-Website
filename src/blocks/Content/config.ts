@@ -1,11 +1,6 @@
 import type { Block, Field } from 'payload'
 
-import {
-  FixedToolbarFeature,
-  HeadingFeature,
-  InlineToolbarFeature,
-  lexicalEditor,
-} from '@payloadcms/richtext-lexical'
+
 
 import { link } from '@/fields/link'
 
@@ -41,11 +36,19 @@ const contentFields: Field[] = [
       },
       {
         name: 'content',
-        type: 'textarea',
+        type: 'array',
         required: false,
         localized: true,
-      },
-    ],
+        fields: [
+          {
+            name: 'text',
+            type: 'textarea',
+            required: false,
+            localized: true,
+          }
+        ]
+      }
+    ]
   },
   {
     name: 'buttons',
@@ -62,15 +65,15 @@ const contentFields: Field[] = [
         name: 'link',
         type: 'text',
         required: true,
-      },
-    ],
+      }
+    ]
   },
   {
     name: 'media',
     type: 'upload',
     relationTo: 'media',
     required: false,
-  },
+  }
 ]
 
 export const Content: Block = {

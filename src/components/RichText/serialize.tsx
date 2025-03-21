@@ -1,5 +1,5 @@
 import { BannerBlock } from '@/blocks/Banner/Component'
-import { CallToActionBlock } from '@/blocks/CallToAction/Component'
+import { CardLabeledBlock } from '@/blocks/CardLabeled/Component'
 import { CodeBlock, CodeBlockProps } from '@/blocks/Code/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import React, { Fragment, JSX } from 'react'
@@ -21,11 +21,11 @@ import type { Page } from '@/payload-types'
 export type NodeTypes =
   | DefaultNodeTypes
   | SerializedBlockNode<
-      | Extract<Page['layout'][0], { blockType: 'cta' }>
-      | Extract<Page['layout'][0], { blockType: 'mediaBlock' }>
-      | BannerBlockProps
-      | CodeBlockProps
-    >
+    | Extract<Page['layout'][0], { blockType: 'card-labeled' }>
+    | Extract<Page['layout'][0], { blockType: 'mediaBlock' }>
+    | BannerBlockProps
+    | CodeBlockProps
+  >
 
 type Props = {
   nodes: NodeTypes[]
@@ -106,8 +106,8 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
           }
 
           switch (blockType) {
-            case 'cta':
-              return <CallToActionBlock key={index} {...block} />
+            case 'card-labeled':
+              return <CardLabeledBlock key={index} {...block} />
             case 'mediaBlock':
               return (
                 <MediaBlock

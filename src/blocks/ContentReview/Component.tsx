@@ -1,15 +1,15 @@
-import type { Post, ArchiveBlock as ArchiveBlockProps } from '@/payload-types'
+import type { Post, ContentReviewBlock as ContentReviewBlockProps } from '@/payload-types'
 
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import RichText from '@/components/RichText'
 
 import { CollectionArchive } from '@/components/CollectionArchive'
 import { TypedLocale } from 'payload'
 
-export const ArchiveBlock: React.FC<
-  ArchiveBlockProps & {
+export const ContentReviewBlock: React.FC<
+  ContentReviewBlockProps & {
     id?: string
     locale: TypedLocale
   }
@@ -43,12 +43,12 @@ export const ArchiveBlock: React.FC<
       limit,
       ...(flattenedCategories && flattenedCategories.length > 0
         ? {
-            where: {
-              categories: {
-                in: flattenedCategories,
-              },
+          where: {
+            categories: {
+              in: flattenedCategories,
             },
-          }
+          },
+        }
         : {}),
     })
 

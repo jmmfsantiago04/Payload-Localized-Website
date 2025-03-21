@@ -2,8 +2,8 @@ import type { CollectionConfig, TypedLocale } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { Archive } from '../../blocks/ArchiveBlock/config'
-import { CallToAction } from '../../blocks/CallToAction/config'
+import { ContentReview } from '../../blocks/ContentReview/config'
+import { CardLabeled } from '../../blocks/CardLabeled/config'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
@@ -72,7 +72,7 @@ export const Pages: CollectionConfig = {
               name: 'layout',
               type: 'blocks',
               localized: true,
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock],
+              blocks: [CardLabeled, Content, MediaBlock, ContentReview, FormBlock],
               required: true,
             },
           ],
