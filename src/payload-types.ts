@@ -141,6 +141,7 @@ export interface Page {
   title: string;
   layout: (
     | HeroHomeBlock
+    | MICEHeroBlock
     | {
         blockName?: string | null;
         cards?:
@@ -254,6 +255,38 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MICEHeroBlock".
+ */
+export interface MICEHeroBlock {
+  title?: string | null;
+  content?: string | null;
+  secondaryContent?: string | null;
+  cards?:
+    | {
+        title?: string | null;
+        content?:
+          | {
+              text?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  buttons?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  media?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mice-hero';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -839,6 +872,7 @@ export interface PagesSelect<T extends boolean = true> {
     | T
     | {
         'hero-home'?: T | HeroHomeBlockSelect<T>;
+        'mice-hero'?: T | MICEHeroBlockSelect<T>;
         'card-labeled'?:
           | T
           | {
@@ -880,6 +914,37 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "HeroHomeBlock_select".
  */
 export interface HeroHomeBlockSelect<T extends boolean = true> {
+  title?: T;
+  content?: T;
+  secondaryContent?: T;
+  cards?:
+    | T
+    | {
+        title?: T;
+        content?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  buttons?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+        id?: T;
+      };
+  media?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MICEHeroBlock_select".
+ */
+export interface MICEHeroBlockSelect<T extends boolean = true> {
   title?: T;
   content?: T;
   secondaryContent?: T;

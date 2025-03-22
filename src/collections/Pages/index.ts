@@ -8,6 +8,7 @@ import OurMissionBlock from '../../blocks/OurMission/config'
 import HomeEndBlock from '../../blocks/HomeEnd/config'
 import HowItWorksBlock from '../../blocks/HowItWorks/config'
 import HeroHomeBlock from '../../blocks/HeroHome/config'
+import MICEHeroBlock from '../../blocks/MICEHero/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { slugField } from '@/fields/slug'
@@ -72,6 +73,7 @@ export const Pages: CollectionConfig = {
               localized: true,
               blocks: [
                 HeroHomeBlock,
+                MICEHeroBlock,
                 CardLabeled,
                 OurMissionBlock,
                 HomeEndBlock,
