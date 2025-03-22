@@ -6,6 +6,8 @@ import type { Page } from '@/payload-types'
 import ContentReviewBlock from '@/blocks/ContentReview/Component'
 import { CardLabeledBlock } from '@/blocks/CardLabeled/Component'
 import { Component as OurMissionComponent } from '@/blocks/OurMission/Component'
+import { Component as HomeEndComponent } from '@/blocks/HomeEnd/Component'
+import { Component as HeroHomeComponent } from '@/blocks/HeroHome/Component'
 import HowItWorksBlock from '@/blocks/HowItWorks/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { FormBlock } from '@/blocks/Form/Component'
@@ -15,6 +17,8 @@ const blocks = {
   'content-review': ContentReviewBlock,
   'card-labeled': CardLabeledBlock,
   'our-mission': OurMissionComponent,
+  'home-end': HomeEndComponent,
+  'hero-home': HeroHomeComponent,
   'how-it-works': HowItWorksBlock,
   media: MediaBlock,
   form: FormBlock

@@ -5,10 +5,11 @@ import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { ContentReview } from '../../blocks/ContentReview/config'
 import { CardLabeled } from '../../blocks/CardLabeled/config'
 import OurMissionBlock from '../../blocks/OurMission/config'
+import HomeEndBlock from '../../blocks/HomeEnd/config'
 import HowItWorksBlock from '../../blocks/HowItWorks/config'
+import HeroHomeBlock from '../../blocks/HeroHome/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
-import { hero } from '@/heros/config'
 import { slugField } from '@/fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
@@ -64,16 +65,21 @@ export const Pages: CollectionConfig = {
       type: 'tabs',
       tabs: [
         {
-          fields: [hero],
-          label: 'Hero',
-        },
-        {
           fields: [
             {
               name: 'layout',
               type: 'blocks',
               localized: true,
-              blocks: [CardLabeled, OurMissionBlock, MediaBlock, ContentReview, FormBlock, HowItWorksBlock],
+              blocks: [
+                HeroHomeBlock,
+                CardLabeled,
+                OurMissionBlock,
+                HomeEndBlock,
+                MediaBlock,
+                ContentReview,
+                FormBlock,
+                HowItWorksBlock
+              ],
               required: true,
             },
           ],

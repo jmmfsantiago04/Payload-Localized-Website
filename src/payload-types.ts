@@ -139,25 +139,8 @@ export interface UserAuthOperations {
 export interface Page {
   id: number;
   title: string;
-  hero?: {
-    type?: ('none' | 'highImpact' | 'mediumImpact' | 'lowImpact') | null;
-    title?: string | null;
-    /**
-     * Text to highlight in Korean version (e.g., "미국 서부")
-     */
-    highlightedText?: string | null;
-    content?: string | null;
-    secondaryContent?: string | null;
-    buttons?:
-      | {
-          label: string;
-          link: string;
-          id?: string | null;
-        }[]
-      | null;
-    media?: (number | null) | Media;
-  };
   layout: (
+    | HeroHomeBlock
     | {
         blockName?: string | null;
         cards?:
@@ -185,6 +168,7 @@ export interface Page {
         blockType: 'card-labeled';
       }
     | OurMissionBlock
+    | HomeEndBlock
     | MediaBlock
     | ContentReviewBlock
     | FormBlock
@@ -204,6 +188,38 @@ export interface Page {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroHomeBlock".
+ */
+export interface HeroHomeBlock {
+  title?: string | null;
+  content?: string | null;
+  secondaryContent?: string | null;
+  cards?:
+    | {
+        title?: string | null;
+        content?:
+          | {
+              text?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  buttons?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  media?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hero-home';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -270,6 +286,38 @@ export interface OurMissionBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'our-mission';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HomeEndBlock".
+ */
+export interface HomeEndBlock {
+  title?: string | null;
+  content?: string | null;
+  secondaryContent?: string | null;
+  cards?:
+    | {
+        title?: string | null;
+        content?:
+          | {
+              text?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  buttons?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  media?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'home-end';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -787,26 +835,10 @@ export interface PayloadMigration {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
-  hero?:
-    | T
-    | {
-        type?: T;
-        title?: T;
-        highlightedText?: T;
-        content?: T;
-        secondaryContent?: T;
-        buttons?:
-          | T
-          | {
-              label?: T;
-              link?: T;
-              id?: T;
-            };
-        media?: T;
-      };
   layout?:
     | T
     | {
+        'hero-home'?: T | HeroHomeBlockSelect<T>;
         'card-labeled'?:
           | T
           | {
@@ -823,6 +855,7 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         'our-mission'?: T | OurMissionBlockSelect<T>;
+        'home-end'?: T | HomeEndBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
         'content-review'?: T | ContentReviewBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
@@ -844,9 +877,71 @@ export interface PagesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroHomeBlock_select".
+ */
+export interface HeroHomeBlockSelect<T extends boolean = true> {
+  title?: T;
+  content?: T;
+  secondaryContent?: T;
+  cards?:
+    | T
+    | {
+        title?: T;
+        content?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  buttons?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+        id?: T;
+      };
+  media?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "OurMissionBlock_select".
  */
 export interface OurMissionBlockSelect<T extends boolean = true> {
+  title?: T;
+  content?: T;
+  secondaryContent?: T;
+  cards?:
+    | T
+    | {
+        title?: T;
+        content?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  buttons?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+        id?: T;
+      };
+  media?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HomeEndBlock_select".
+ */
+export interface HomeEndBlockSelect<T extends boolean = true> {
   title?: T;
   content?: T;
   secondaryContent?: T;
@@ -1262,21 +1357,21 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: number;
-  navItems?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
-          url?: string | null;
-          label: string;
-        };
-        id?: string | null;
-      }[]
-    | null;
+  logo: number | Media;
+  /**
+   * Menu items will be localized based on the selected language
+   */
+  menuItems: {
+    /**
+     * The text that will appear in the menu (will be localized)
+     */
+    label: string;
+    /**
+     * Use relative paths (e.g., "/about", "/services")
+     */
+    link: string;
+    id?: string | null;
+  }[];
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1309,18 +1404,12 @@ export interface Footer {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
-  navItems?:
+  logo?: T;
+  menuItems?:
     | T
     | {
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-            };
+        label?: T;
+        link?: T;
         id?: T;
       };
   updatedAt?: T;
