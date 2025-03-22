@@ -9,6 +9,8 @@ import HomeEndBlock from '../../blocks/HomeEnd/config'
 import HowItWorksBlock from '../../blocks/HowItWorks/config'
 import HeroHomeBlock from '../../blocks/HeroHome/config'
 import MICEHeroBlock from '../../blocks/MICEHero/config'
+import FAQBlock from '../../blocks/FAQBlock/config'
+import ShuttleCardsBlock from '../../blocks/ShuttleCards/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { slugField } from '@/fields/slug'
@@ -80,7 +82,9 @@ export const Pages: CollectionConfig = {
                 MediaBlock,
                 ContentReview,
                 FormBlock,
-                HowItWorksBlock
+                HowItWorksBlock,
+                FAQBlock,
+                ShuttleCardsBlock
               ],
               required: true,
             },

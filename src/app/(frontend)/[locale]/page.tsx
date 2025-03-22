@@ -10,8 +10,8 @@ import { TypedLocale } from 'payload'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import type { Page as PageType } from '@/payload-types'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
-import { RenderHero } from '@/heros/RenderHero'
 import PageClient from './[slug]/page.client'
+import { getPayloadClient } from '@/utilities/getPayloadClient'
 
 type Args = {
   params: Promise<{
@@ -27,7 +27,6 @@ export default async function Page({ params: paramsPromise }: Args) {
   let page: PageType | null
 
   page = await queryPage({
-    slug,
     locale,
   })
 
@@ -35,14 +34,12 @@ export default async function Page({ params: paramsPromise }: Args) {
     return <PayloadRedirects url={url} />
   }
 
-  const { hero, layout } = page
+  const { layout } = page
 
   return (
     <article className="pt-16 pb-24">
       <PageClient />
       <PayloadRedirects disableNotFound url={url} />
-
-      <RenderHero {...hero} />
       <RenderBlocks blocks={layout} locale={locale} />
     </article>
   )
@@ -52,27 +49,34 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { locale = 'en', slug = 'home' } = await params
   const page = await queryPage({
     locale,
-    slug,
   })
 
   return generateMeta({ doc: page })
 }
 
-const queryPage = cache(async ({ locale, slug }: { locale: TypedLocale; slug: string }) => {
+const queryPage = cache(async ({ locale }: { locale: TypedLocale }) => {
   const { isEnabled: draft } = await draftMode()
-
-  const payload = await getPayload({ config: configPromise })
+  const payload = await getPayloadClient()
 
   const result = await payload.find({
     collection: 'pages',
     draft,
     limit: 1,
+    locale,
     overrideAccess: draft,
-    locale: locale,
     where: {
-      slug: {
-        equals: slug,
-      },
+      and: [
+        {
+          slug: {
+            equals: 'home'
+          }
+        },
+        {
+          _status: {
+            equals: 'published'
+          }
+        }
+      ]
     },
   })
 

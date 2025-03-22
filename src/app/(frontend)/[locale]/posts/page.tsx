@@ -9,6 +9,11 @@ import React from 'react'
 import PageClient from './page.client'
 import { TypedLocale } from 'payload'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { getPayloadClient } from '@/utilities/getPayloadClient'
+import { cache } from 'react'
+import { draftMode } from 'next/headers'
+
+const POSTS_PER_PAGE = 12
 
 export const revalidate = 600
 
@@ -18,10 +23,24 @@ type Args = {
   }>
 }
 
+const queryPosts = cache(async ({ locale }: { locale: TypedLocale }) => {
+  const { isEnabled: draft } = await draftMode()
+  const payload = await getPayloadClient()
+
+  return await payload.find({
+    collection: 'posts',
+    draft,
+    limit: POSTS_PER_PAGE,
+    locale,
+    overrideAccess: draft,
+    sort: '-publishedAt',
+  })
+})
+
 export default async function Page({ params }: Args) {
   const { locale = 'en' } = await params
   const t = await getTranslations()
-  const payload = await getPayload({ config: configPromise })
+  const payload = await getPayloadClient()
 
   const posts = await payload.find({
     collection: 'posts',

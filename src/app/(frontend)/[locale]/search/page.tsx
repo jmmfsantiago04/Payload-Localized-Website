@@ -9,6 +9,9 @@ import { Search } from '@/search/Component'
 import PageClient from './page.client'
 import { getTranslations } from 'next-intl/server'
 import { TypedLocale } from 'payload'
+import { getPayloadClient } from '@/utilities/getPayloadClient'
+import { cache } from 'react'
+import { draftMode } from 'next/headers'
 
 type Args = {
   searchParams: Promise<{
@@ -18,13 +21,32 @@ type Args = {
     locale: TypedLocale
   }>
 }
+
+const querySearch = cache(async ({ locale, searchQuery }: { locale: TypedLocale; searchQuery: string }) => {
+  const { isEnabled: draft } = await draftMode()
+  const payload = await getPayloadClient()
+
+  return await payload.find({
+    collection: 'search',
+    draft,
+    limit: 20,
+    locale,
+    overrideAccess: draft,
+    where: {
+      text: {
+        like: searchQuery,
+      },
+    },
+  })
+})
+
 export default async function Page({
   searchParams: searchParamsPromise,
   params: paramsPromise,
 }: Args) {
   const { q: query } = await searchParamsPromise
   const { locale } = await paramsPromise
-  const payload = await getPayload({ config: configPromise })
+  const payload = await getPayloadClient()
   const t = await getTranslations()
 
   const posts = await payload.find({
@@ -34,31 +56,31 @@ export default async function Page({
     locale,
     ...(query
       ? {
-          where: {
-            or: [
-              {
-                title: {
-                  like: query,
-                },
+        where: {
+          or: [
+            {
+              title: {
+                like: query,
               },
-              {
-                'meta.description': {
-                  like: query,
-                },
+            },
+            {
+              'meta.description': {
+                like: query,
               },
-              {
-                'meta.title': {
-                  like: query,
-                },
+            },
+            {
+              'meta.title': {
+                like: query,
               },
-              {
-                slug: {
-                  like: query,
-                },
+            },
+            {
+              slug: {
+                like: query,
               },
-            ],
-          },
-        }
+            },
+          ],
+        },
+      }
       : {}),
   })
 

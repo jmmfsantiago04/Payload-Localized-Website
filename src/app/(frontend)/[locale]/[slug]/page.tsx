@@ -15,8 +15,13 @@ import PageClient from './page.client'
 import { TypedLocale } from 'payload'
 import { routing } from '@/i18n/routing'
 
+// Cache the Payload client initialization
+const getPayloadClient = cache(async () => {
+  return await getPayload({ config: configPromise })
+})
+
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
+  const payload = await getPayloadClient()
   const pages = await payload.find({
     collection: 'pages',
     draft: false,
@@ -45,9 +50,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   const { slug = 'home', locale = 'en' } = await paramsPromise
   const url = '/' + slug
 
-  let page: PageType | null
-
-  page = await queryPage({
+  let page: PageType | null = await queryPage({
     slug,
     locale,
   })
@@ -85,8 +88,7 @@ export async function generateMetadata({ params: paramsPromise }): Promise<Metad
 
 const queryPage = cache(async ({ slug, locale }: { slug: string; locale: TypedLocale }) => {
   const { isEnabled: draft } = await draftMode()
-
-  const payload = await getPayload({ config: configPromise })
+  const payload = await getPayloadClient()
 
   const result = await payload.find({
     collection: 'pages',
@@ -95,9 +97,18 @@ const queryPage = cache(async ({ slug, locale }: { slug: string; locale: TypedLo
     locale,
     overrideAccess: draft,
     where: {
-      slug: {
-        equals: slug,
-      },
+      and: [
+        {
+          slug: {
+            equals: slug,
+          }
+        },
+        {
+          _status: {
+            equals: 'published'
+          }
+        }
+      ]
     },
   })
 

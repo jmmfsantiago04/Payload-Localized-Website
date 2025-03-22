@@ -9,6 +9,8 @@ import { Component as OurMissionComponent } from '@/blocks/OurMission/Component'
 import { Component as HomeEndComponent } from '@/blocks/HomeEnd/Component'
 import { Component as HeroHomeComponent } from '@/blocks/HeroHome/Component'
 import { Component as MICEHeroComponent } from '@/blocks/MICEHero/Component'
+import { Component as FAQComponent } from '@/blocks/FAQBlock/Component'
+import { Component as ShuttleCardsComponent } from '@/blocks/ShuttleCards/Component'
 import HowItWorksBlock from '@/blocks/HowItWorks/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { FormBlock } from '@/blocks/Form/Component'
@@ -22,6 +24,8 @@ const blocks = {
   'hero-home': HeroHomeComponent,
   'mice-hero': MICEHeroComponent,
   'how-it-works': HowItWorksBlock,
+  'faq': FAQComponent,
+  'shuttle-cards': ShuttleCardsComponent,
   media: MediaBlock,
   form: FormBlock
 }

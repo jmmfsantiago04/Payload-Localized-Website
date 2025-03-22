@@ -174,6 +174,8 @@ export interface Page {
     | ContentReviewBlock
     | FormBlock
     | HowItWorksBlock
+    | FAQBlock
+    | ShuttleCardsBlock
   )[];
   meta?: {
     title?: string | null;
@@ -623,6 +625,61 @@ export interface HowItWorksBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQBlock".
+ */
+export interface FAQBlock {
+  title?: string | null;
+  content?: string | null;
+  secondaryContent?: string | null;
+  cards?:
+    | {
+        title?: string | null;
+        content?:
+          | {
+              text?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  buttons?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  media?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ShuttleCardsBlock".
+ */
+export interface ShuttleCardsBlock {
+  title: string;
+  imageCards?:
+    | {
+        media?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  featureCards?:
+    | {
+        text: string;
+        media: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'shuttle-cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
 export interface Post {
@@ -894,6 +951,8 @@ export interface PagesSelect<T extends boolean = true> {
         'content-review'?: T | ContentReviewBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         'how-it-works'?: T | HowItWorksBlockSelect<T>;
+        faq?: T | FAQBlockSelect<T>;
+        'shuttle-cards'?: T | ShuttleCardsBlockSelect<T>;
       };
   meta?:
     | T
@@ -1108,6 +1167,59 @@ export interface HowItWorksBlockSelect<T extends boolean = true> {
         id?: T;
       };
   media?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQBlock_select".
+ */
+export interface FAQBlockSelect<T extends boolean = true> {
+  title?: T;
+  content?: T;
+  secondaryContent?: T;
+  cards?:
+    | T
+    | {
+        title?: T;
+        content?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  buttons?:
+    | T
+    | {
+        label?: T;
+        link?: T;
+        id?: T;
+      };
+  media?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ShuttleCardsBlock_select".
+ */
+export interface ShuttleCardsBlockSelect<T extends boolean = true> {
+  title?: T;
+  imageCards?:
+    | T
+    | {
+        media?: T;
+        id?: T;
+      };
+  featureCards?:
+    | T
+    | {
+        text?: T;
+        media?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
