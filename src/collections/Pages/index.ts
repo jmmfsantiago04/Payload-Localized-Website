@@ -11,6 +11,7 @@ import HeroHomeBlock from '../../blocks/HeroHome/config'
 import MICEHeroBlock from '../../blocks/MICEHero/config'
 import FAQBlock from '../../blocks/FAQBlock/config'
 import ShuttleCardsBlock from '../../blocks/ShuttleCards/config'
+import TravelPackagesBlock from '../../blocks/TravelPackages/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { slugField } from '@/fields/slug'
@@ -84,7 +85,8 @@ export const Pages: CollectionConfig = {
                 FormBlock,
                 HowItWorksBlock,
                 FAQBlock,
-                ShuttleCardsBlock
+                ShuttleCardsBlock,
+                TravelPackagesBlock
               ],
               required: true,
             },

@@ -11,6 +11,7 @@ import { Component as HeroHomeComponent } from '@/blocks/HeroHome/Component'
 import { Component as MICEHeroComponent } from '@/blocks/MICEHero/Component'
 import { Component as FAQComponent } from '@/blocks/FAQBlock/Component'
 import { Component as ShuttleCardsComponent } from '@/blocks/ShuttleCards/Component'
+import { Component as TravelPackagesComponent } from '@/blocks/TravelPackages/Component'
 import HowItWorksBlock from '@/blocks/HowItWorks/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { FormBlock } from '@/blocks/Form/Component'
@@ -26,6 +27,7 @@ const blocks = {
   'how-it-works': HowItWorksBlock,
   'faq': FAQComponent,
   'shuttle-cards': ShuttleCardsComponent,
+  'travel-packages': TravelPackagesComponent,
   media: MediaBlock,
   form: FormBlock
 }

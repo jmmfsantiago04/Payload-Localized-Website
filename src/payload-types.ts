@@ -176,6 +176,7 @@ export interface Page {
     | HowItWorksBlock
     | FAQBlock
     | ShuttleCardsBlock
+    | TravelPackagesBlock
   )[];
   meta?: {
     title?: string | null;
@@ -680,6 +681,49 @@ export interface ShuttleCardsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TravelPackagesBlock".
+ */
+export interface TravelPackagesBlock {
+  title?: string | null;
+  content?: string | null;
+  secondaryContent?: string | null;
+  mediaGallery?:
+    | {
+        media: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  cards?:
+    | {
+        title?: string | null;
+        price: number;
+        content?:
+          | {
+              text?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        mostPopular?: boolean | null;
+        button: {
+          label: string;
+          link: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  buttons?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'travel-packages';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
 export interface Post {
@@ -953,6 +997,7 @@ export interface PagesSelect<T extends boolean = true> {
         'how-it-works'?: T | HowItWorksBlockSelect<T>;
         faq?: T | FAQBlockSelect<T>;
         'shuttle-cards'?: T | ShuttleCardsBlockSelect<T>;
+        'travel-packages'?: T | TravelPackagesBlockSelect<T>;
       };
   meta?:
     | T
@@ -1218,6 +1263,50 @@ export interface ShuttleCardsBlockSelect<T extends boolean = true> {
     | {
         text?: T;
         media?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TravelPackagesBlock_select".
+ */
+export interface TravelPackagesBlockSelect<T extends boolean = true> {
+  title?: T;
+  content?: T;
+  secondaryContent?: T;
+  mediaGallery?:
+    | T
+    | {
+        media?: T;
+        id?: T;
+      };
+  cards?:
+    | T
+    | {
+        title?: T;
+        price?: T;
+        content?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        mostPopular?: T;
+        button?:
+          | T
+          | {
+              label?: T;
+              link?: T;
+            };
+        id?: T;
+      };
+  buttons?:
+    | T
+    | {
+        label?: T;
+        link?: T;
         id?: T;
       };
   id?: T;
