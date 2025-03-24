@@ -4,7 +4,7 @@ import React from 'react'
 
 import type { Footer } from '@/payload-types'
 
-import { ThemeSelector } from '@/providers/Theme/ThemeSelector'
+
 import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 import { CMSLink } from '@/components/Link'
 import { TypedLocale } from 'payload'
@@ -29,7 +29,6 @@ export async function Footer({ locale }: { locale: TypedLocale }) {
             })}
           </nav>
           <LocaleSwitcher className="ml-5" />
-          <ThemeSelector  />
         </div>
       </div>
     </footer>

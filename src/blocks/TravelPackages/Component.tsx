@@ -36,13 +36,13 @@ type Props = {
 }
 
 export const Component: React.FC<Props> = (props) => {
-    const { title, content, secondaryContent, cards, buttons } = props
+    const { title, content, secondaryContent, cards = [], buttons = [] } = props
     const [currentCardIndex, setCurrentCardIndex] = useState(0)
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0)
 
     // Function to handle card navigation
     const handleCardNavigation = (direction: 'prev' | 'next') => {
-        if (!cards) return
+        if (!cards || cards.length === 0) return
 
         if (direction === 'next') {
             setCurrentCardIndex((prev) => (prev + 1) % cards.length)
@@ -53,7 +53,7 @@ export const Component: React.FC<Props> = (props) => {
 
     // Function to handle media navigation
     const handleMediaNavigation = (direction: 'prev' | 'next') => {
-        if (!props.mediaGallery) return
+        if (!props.mediaGallery || props.mediaGallery.length === 0) return
 
         if (direction === 'next') {
             setCurrentMediaIndex((prev) => (prev + 1) % props.mediaGallery!.length)
@@ -115,7 +115,7 @@ export const Component: React.FC<Props> = (props) => {
                 {/* Card and Gallery Container */}
                 <div className="flex flex-col lg:flex-row justify-center gap-[10px] items-center lg:items-start max-w-[1174px] mx-auto">
                     {/* Card */}
-                    {cards && cards.length > 0 && (
+                    {cards && cards.length > 0 && cards[currentCardIndex] && (
                         <motion.div
                             key={currentCardIndex}
                             initial={{ opacity: 0, x: 50 }}
@@ -211,48 +211,51 @@ export const Component: React.FC<Props> = (props) => {
                     )}
 
                     {/* Media Gallery */}
-                    {props.mediaGallery && props.mediaGallery.length > 0 && props.mediaGallery[currentMediaIndex].media?.url && (
-                        <div className="relative w-full lg:w-[792px] h-[485px] rounded-[20px] overflow-hidden">
-                            <Image
-                                key={currentMediaIndex}
-                                src={props.mediaGallery[currentMediaIndex].media.url}
-                                alt={props.mediaGallery[currentMediaIndex].media.alt || "Gallery image"}
-                                fill
-                                className="object-cover"
-                            />
-                            {/* Navigation Buttons */}
-                            <div className="absolute bottom-6 right-6 flex gap-[10px]">
-                                <button
-                                    onClick={() => handleMediaNavigation('prev')}
-                                    className="w-[40px] h-[40px] rounded-[8px] p-[12px] bg-white flex items-center justify-center hover:bg-gray-100 transition-colors"
-                                >
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M15.8333 10H4.16667M4.16667 10L10 15.8333M4.16667 10L10 4.16667"
-                                            stroke="#1976D2"
-                                            strokeWidth="1.67"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </button>
-                                <button
-                                    onClick={() => handleMediaNavigation('next')}
-                                    className="w-[40px] h-[40px] rounded-[8px] p-[12px] bg-white flex items-center justify-center hover:bg-gray-100 transition-colors"
-                                >
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M4.16667 10H15.8333M15.8333 10L10 4.16667M15.8333 10L10 15.8333"
-                                            stroke="#1976D2"
-                                            strokeWidth="1.67"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </button>
+                    {props.mediaGallery &&
+                        props.mediaGallery.length > 0 &&
+                        props.mediaGallery[currentMediaIndex] &&
+                        props.mediaGallery[currentMediaIndex].media?.url && (
+                            <div className="relative w-full lg:w-[792px] h-[485px] rounded-[20px] overflow-hidden">
+                                <Image
+                                    key={currentMediaIndex}
+                                    src={props.mediaGallery[currentMediaIndex].media.url}
+                                    alt={props.mediaGallery[currentMediaIndex].media.alt || "Gallery image"}
+                                    fill
+                                    className="object-cover"
+                                />
+                                {/* Navigation Buttons */}
+                                <div className="absolute bottom-6 right-6 flex gap-[10px]">
+                                    <button
+                                        onClick={() => handleMediaNavigation('prev')}
+                                        className="w-[40px] h-[40px] rounded-[8px] p-[12px] bg-white flex items-center justify-center hover:bg-gray-100 transition-colors"
+                                    >
+                                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M15.8333 10H4.16667M4.16667 10L10 15.8333M4.16667 10L10 4.16667"
+                                                stroke="#1976D2"
+                                                strokeWidth="1.67"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
+                                    </button>
+                                    <button
+                                        onClick={() => handleMediaNavigation('next')}
+                                        className="w-[40px] h-[40px] rounded-[8px] p-[12px] bg-white flex items-center justify-center hover:bg-gray-100 transition-colors"
+                                    >
+                                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M4.16667 10H15.8333M15.8333 10L10 4.16667M15.8333 10L10 15.8333"
+                                                stroke="#1976D2"
+                                                strokeWidth="1.67"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
                 </div>
 
                 {/* Buttons Section */}
@@ -273,24 +276,26 @@ export const Component: React.FC<Props> = (props) => {
                 )}
 
                 {/* Navigation Arrows */}
-                <div className="flex justify-center mt-[30px] gap-2 mb-8">
-                    <button
-                        onClick={() => handleCardNavigation('prev')}
-                        className="w-10 h-10 rounded-full border-2 border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors duration-300"
-                    >
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <button
-                        onClick={() => handleCardNavigation('next')}
-                        className="w-10 h-10 rounded-full border-2 border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors duration-300"
-                    >
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                </div>
+                {cards && cards.length > 1 && (
+                    <div className="flex justify-center mt-[30px] gap-2 mb-8">
+                        <button
+                            onClick={() => handleCardNavigation('prev')}
+                            className="w-10 h-10 rounded-full border-2 border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors duration-300"
+                        >
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button
+                            onClick={() => handleCardNavigation('next')}
+                            className="w-10 h-10 rounded-full border-2 border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors duration-300"
+                        >
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                )}
             </div>
         </section>
     )

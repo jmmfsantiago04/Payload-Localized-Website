@@ -6,6 +6,7 @@ import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
+import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
 import {
   BoldFeature,
   FixedToolbarFeature,
@@ -208,6 +209,15 @@ export default buildConfig({
         fields: ({ defaultFields }) => {
           return [...defaultFields, ...searchFields]
         },
+      },
+    }),
+    uploadthingStorage({
+      collections: {
+        media: true,
+      },
+      options: {
+        token: process.env.UPLOADTHING_TOKEN,
+        acl: 'public-read',
       },
     }),
     payloadCloudPlugin(), // storage-adapter-placeholder

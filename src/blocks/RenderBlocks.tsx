@@ -15,6 +15,7 @@ import { Component as TravelPackagesComponent } from '@/blocks/TravelPackages/Co
 import HowItWorksBlock from '@/blocks/HowItWorks/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { FormBlock } from '@/blocks/Form/Component'
+import { Component as HeroSupportComponent } from '@/blocks/HeroSupport/Component'
 import { TypedLocale } from 'payload'
 
 const blocks = {
@@ -28,6 +29,7 @@ const blocks = {
   'faq': FAQComponent,
   'shuttle-cards': ShuttleCardsComponent,
   'travel-packages': TravelPackagesComponent,
+  'hero-support': HeroSupportComponent,
   media: MediaBlock,
   form: FormBlock
 }

@@ -14,6 +14,7 @@ import ShuttleCardsBlock from '../../blocks/ShuttleCards/config'
 import TravelPackagesBlock from '../../blocks/TravelPackages/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import HeroSupportBlock from '../../blocks/HeroSupport/config'
 import { slugField } from '@/fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
@@ -86,7 +87,8 @@ export const Pages: CollectionConfig = {
                 HowItWorksBlock,
                 FAQBlock,
                 ShuttleCardsBlock,
-                TravelPackagesBlock
+                TravelPackagesBlock,
+                HeroSupportBlock
               ],
               required: true,
             },

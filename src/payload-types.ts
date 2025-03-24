@@ -177,6 +177,7 @@ export interface Page {
     | FAQBlock
     | ShuttleCardsBlock
     | TravelPackagesBlock
+    | HeroSupportBlock
   )[];
   meta?: {
     title?: string | null;
@@ -247,6 +248,7 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
+  _key?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -724,6 +726,24 @@ export interface TravelPackagesBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroSupportBlock".
+ */
+export interface HeroSupportBlock {
+  title: string;
+  featureCards?:
+    | {
+        text: string;
+        content: string;
+        media: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hero-support';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
 export interface Post {
@@ -998,6 +1018,7 @@ export interface PagesSelect<T extends boolean = true> {
         faq?: T | FAQBlockSelect<T>;
         'shuttle-cards'?: T | ShuttleCardsBlockSelect<T>;
         'travel-packages'?: T | TravelPackagesBlockSelect<T>;
+        'hero-support'?: T | HeroSupportBlockSelect<T>;
       };
   meta?:
     | T
@@ -1314,6 +1335,23 @@ export interface TravelPackagesBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroSupportBlock_select".
+ */
+export interface HeroSupportBlockSelect<T extends boolean = true> {
+  title?: T;
+  featureCards?:
+    | T
+    | {
+        text?: T;
+        content?: T;
+        media?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -1349,6 +1387,7 @@ export interface PostsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
+  _key?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
