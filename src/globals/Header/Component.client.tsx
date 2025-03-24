@@ -28,11 +28,11 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
 
   return (
     <header
-      className="container relative z-20 flex justify-end gap-2 py-8"
+      className="container mx-auto relative z-20 flex justify-between items-center py-4 px-2 sm:px-4 md:px-6 lg:px-8 lg:py-8"
       {...(theme ? { 'data-theme': theme } : {})}
     >
-      <Link href="/" className="me-auto">
-        <Logo className='invert dark:invert-0' />
+      <Link href="/home">
+        <Logo className='xl:ml-[75px] w-[80px] md:w-[95px] lg:w-[107px] h-auto' />
       </Link>
       <HeaderNav header={header} />
     </header>

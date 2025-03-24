@@ -16,11 +16,16 @@ export const FormBlock: Block = {
       type: 'relationship',
       relationTo: 'forms',
       required: true,
+      localized: true,
     },
     {
       name: 'enableIntro',
       type: 'checkbox',
-      label: 'Enable Intro Content',
+      label: {
+        en: 'Enable Intro Content',
+        ko: '소개 콘텐츠 활성화'
+      },
+      localized: true,
     },
     {
       name: 'introContent',
@@ -39,14 +44,23 @@ export const FormBlock: Block = {
           ]
         },
       }),
-      label: 'Intro Content',
+      label: {
+        en: 'Intro Content',
+        ko: '소개 콘텐츠'
+      },
     },
   ],
   graphQL: {
     singularName: 'FormBlock',
   },
   labels: {
-    plural: 'Form Blocks',
-    singular: 'Form Block',
+    plural: {
+      en: 'Form Blocks',
+      ko: '폼 블록'
+    },
+    singular: {
+      en: 'Form Block',
+      ko: '폼 블록'
+    },
   },
 }

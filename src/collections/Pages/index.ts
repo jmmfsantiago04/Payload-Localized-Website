@@ -7,6 +7,7 @@ import { CardLabeled } from '../../blocks/CardLabeled/config'
 import OurMissionBlock from '../../blocks/OurMission/config'
 import HomeEndBlock from '../../blocks/HomeEnd/config'
 import HowItWorksBlock from '../../blocks/HowItWorks/config'
+import HeroShuttleBlock from '../../blocks/HeroShuttle/config'
 import HeroHomeBlock from '../../blocks/HeroHome/config'
 import MICEHeroBlock from '../../blocks/MICEHero/config'
 import FAQBlock from '../../blocks/FAQBlock/config'
@@ -78,6 +79,7 @@ export const Pages: CollectionConfig = {
               blocks: [
                 HeroHomeBlock,
                 MICEHeroBlock,
+                HeroShuttleBlock,
                 CardLabeled,
                 OurMissionBlock,
                 HomeEndBlock,

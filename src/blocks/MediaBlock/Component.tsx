@@ -37,20 +37,32 @@ export const MediaBlock: React.FC<Props> = (props) => {
   return (
     <div
       className={cn(
-        '',
+        'relative flex items-center justify-center',
         {
           container: position === 'default' && enableGutter,
         },
         className,
       )}
     >
-      {position === 'fullscreen' && (
-        <div className="relative">
-          <Media resource={media} src={staticImage} />
+      {(position === 'fullscreen' || position === 'default') && (
+        <div
+          style={{
+            width: position === 'fullscreen' ? '3px' : '156px',
+            height: '148.5px',
+          }}
+          className="overflow-hidden"
+        >
+          <Media
+            imgClassName={cn('rounded', imgClassName, {
+              'w-[3px]': position === 'fullscreen',
+              'w-[156px]': position === 'default',
+              'h-[148.5px]': true
+            })}
+            resource={media}
+            src={staticImage}
+            fill={false}
+          />
         </div>
-      )}
-      {position === 'default' && (
-        <Media imgClassName={cn('rounded', imgClassName)} resource={media} src={staticImage} />
       )}
       {caption && (
         <div

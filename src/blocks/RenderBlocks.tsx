@@ -16,9 +16,11 @@ import HowItWorksBlock from '@/blocks/HowItWorks/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { Component as HeroSupportComponent } from '@/blocks/HeroSupport/Component'
+import { Component as HeroShuttleComponent } from '@/blocks/HeroShuttle/Component'
 import { TypedLocale } from 'payload'
 
 const blocks = {
+  'hero-shuttle': HeroShuttleComponent,
   'content-review': ContentReviewBlock,
   'card-labeled': CardLabeledBlock,
   'our-mission': OurMissionComponent,
@@ -30,8 +32,8 @@ const blocks = {
   'shuttle-cards': ShuttleCardsComponent,
   'travel-packages': TravelPackagesComponent,
   'hero-support': HeroSupportComponent,
-  media: MediaBlock,
-  form: FormBlock
+  mediaBlock: MediaBlock,
+  formBlock: FormBlock
 }
 
 export const RenderBlocks: React.FC<{
@@ -47,14 +49,24 @@ export const RenderBlocks: React.FC<{
       <Fragment>
         {layoutBlocks.map((block, index) => {
           const { blockType } = block
+          const previousBlock = index > 0 ? layoutBlocks[index - 1] : null
 
           if (blockType && blockType in blocks) {
             const Block = blocks[blockType as keyof typeof blocks]
 
             if (Block) {
+              // Set removeTopPadding for FAQ block when it follows HeroSupport
+              const shouldRemoveTopPadding =
+                blockType === 'faq' &&
+                previousBlock?.blockType === 'hero-support'
+
               return (
                 <div className="my-16" key={index}>
-                  <Block {...block} locale={locale} />
+                  <Block
+                    {...block}
+                    locale={locale}
+                    removeTopPadding={shouldRemoveTopPadding}
+                  />
                 </div>
               )
             }

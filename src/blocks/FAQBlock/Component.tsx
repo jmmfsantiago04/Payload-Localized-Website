@@ -34,10 +34,11 @@ type Props = {
         alt?: string
     } | number | null
     locale: TypedLocale
+    removeTopPadding?: boolean
 }
 
 export const Component: React.FC<Props> = (props) => {
-    const { title, content, secondaryContent, cards, buttons, media, locale } = props
+    const { title, content, secondaryContent, cards, buttons, media, locale, removeTopPadding } = props
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     const titleRef = useRef(null)
@@ -50,7 +51,12 @@ export const Component: React.FC<Props> = (props) => {
 
     return (
         <section className="relative flex justify-center w-full px-3 xs:px-4 sm:px-6 lg:px-8 bg-[#F5F9FF]">
-            <div className="relative w-full max-w-7xl py-12 xs:py-16 sm:py-20 lg:py-24">
+            <div className={cn(
+                "relative w-full max-w-7xl",
+                removeTopPadding
+                    ? "pt-0 pb-12 xs:pb-16 sm:pb-20 lg:pb-24"
+                    : "py-12 xs:py-16 sm:py-20 lg:py-24"
+            )}>
                 {/* Title Section */}
                 <motion.div
                     ref={titleRef}

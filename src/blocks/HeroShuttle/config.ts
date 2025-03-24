@@ -17,6 +17,18 @@ const contentFields: Field[] = [
         localized: true,
     },
     {
+        name: 'content',
+        type: 'textarea',
+        required: true,
+        localized: true,
+    },
+    {
+        name: 'secondaryContent',
+        type: 'textarea',
+        required: true,
+        localized: true,
+    },
+    {
         name: 'form',
         type: 'relationship',
         relationTo: 'forms',
@@ -33,12 +45,7 @@ const contentFields: Field[] = [
                 required: true,
                 localized: true,
             },
-            {
-                name: 'content',
-                type: 'textarea',
-                required: true,
-                localized: true,
-            },
+
             {
                 name: 'media',
                 type: 'upload',
@@ -49,10 +56,10 @@ const contentFields: Field[] = [
     }
 ]
 
-const HeroSupportBlock: Block = {
-    slug: 'hero-support',
-    interfaceName: 'HeroSupportBlock',
+const HeroShuttleBlock: Block = {
+    slug: 'hero-shuttle',
+    interfaceName: 'HeroShuttleBlock',
     fields: contentFields,
 }
 
-export default HeroSupportBlock 
+export default HeroShuttleBlock 

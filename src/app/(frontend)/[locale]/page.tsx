@@ -37,7 +37,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   const { layout } = page
 
   return (
-    <article className="pt-8 pb-12">
+    <article>
       <PageClient />
       <PayloadRedirects disableNotFound url={url} />
       <RenderBlocks blocks={layout} locale={locale} />

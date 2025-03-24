@@ -142,6 +142,7 @@ export interface Page {
   layout: (
     | HeroHomeBlock
     | MICEHeroBlock
+    | HeroShuttleBlock
     | {
         blockName?: string | null;
         cards?:
@@ -295,131 +296,23 @@ export interface MICEHeroBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "OurMissionBlock".
+ * via the `definition` "HeroShuttleBlock".
  */
-export interface OurMissionBlock {
-  title?: string | null;
-  content?: string | null;
-  secondaryContent?: string | null;
-  cards?:
+export interface HeroShuttleBlock {
+  title: string;
+  content: string;
+  secondaryContent: string;
+  form?: (number | null) | Form;
+  featureCards?:
     | {
-        title?: string | null;
-        content?:
-          | {
-              text?: string | null;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  buttons?:
-    | {
-        label: string;
-        link: string;
-        id?: string | null;
-      }[]
-    | null;
-  media?: (number | null) | Media;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'our-mission';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "HomeEndBlock".
- */
-export interface HomeEndBlock {
-  title?: string | null;
-  content?: string | null;
-  secondaryContent?: string | null;
-  cards?:
-    | {
-        title?: string | null;
-        content?:
-          | {
-              text?: string | null;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  buttons?:
-    | {
-        label: string;
-        link: string;
-        id?: string | null;
-      }[]
-    | null;
-  media?: (number | null) | Media;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'home-end';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "MediaBlock".
- */
-export interface MediaBlock {
-  position?: ('default' | 'fullscreen') | null;
-  media: number | Media;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'mediaBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContentReviewBlock".
- */
-export interface ContentReviewBlock {
-  title?: string | null;
-  description?: string | null;
-  reviews?:
-    | {
-        reviewerInitial?: string | null;
-        reviewerName?: string | null;
-        reviewText?: string | null;
-        readMoreLink?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  buttons?:
-    | {
-        label?: string | null;
-        link?: string | null;
+        text: string;
+        media: number | Media;
         id?: string | null;
       }[]
     | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'content-review';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FormBlock".
- */
-export interface FormBlock {
-  form: number | Form;
-  enableIntro?: boolean | null;
-  introContent?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'formBlock';
+  blockType: 'hero-shuttle';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -596,6 +489,134 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OurMissionBlock".
+ */
+export interface OurMissionBlock {
+  title?: string | null;
+  content?: string | null;
+  secondaryContent?: string | null;
+  cards?:
+    | {
+        title?: string | null;
+        content?:
+          | {
+              text?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  buttons?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  media?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'our-mission';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HomeEndBlock".
+ */
+export interface HomeEndBlock {
+  title?: string | null;
+  content?: string | null;
+  secondaryContent?: string | null;
+  cards?:
+    | {
+        title?: string | null;
+        content?:
+          | {
+              text?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  buttons?:
+    | {
+        label: string;
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  media?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'home-end';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlock".
+ */
+export interface MediaBlock {
+  position?: ('default' | 'fullscreen') | null;
+  media: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mediaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentReviewBlock".
+ */
+export interface ContentReviewBlock {
+  title?: string | null;
+  description?: string | null;
+  reviews?:
+    | {
+        reviewerInitial?: string | null;
+        reviewerName?: string | null;
+        reviewText?: string | null;
+        readMoreLink?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  buttons?:
+    | {
+        label?: string | null;
+        link?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'content-review';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlock".
+ */
+export interface FormBlock {
+  form: number | Form;
+  enableIntro?: boolean | null;
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'formBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "HowItWorksBlock".
  */
 export interface HowItWorksBlock {
@@ -730,6 +751,7 @@ export interface TravelPackagesBlock {
  */
 export interface HeroSupportBlock {
   title: string;
+  form?: (number | null) | Form;
   featureCards?:
     | {
         text: string;
@@ -994,6 +1016,7 @@ export interface PagesSelect<T extends boolean = true> {
     | {
         'hero-home'?: T | HeroHomeBlockSelect<T>;
         'mice-hero'?: T | MICEHeroBlockSelect<T>;
+        'hero-shuttle'?: T | HeroShuttleBlockSelect<T>;
         'card-labeled'?:
           | T
           | {
@@ -1093,6 +1116,25 @@ export interface MICEHeroBlockSelect<T extends boolean = true> {
         id?: T;
       };
   media?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroShuttleBlock_select".
+ */
+export interface HeroShuttleBlockSelect<T extends boolean = true> {
+  title?: T;
+  content?: T;
+  secondaryContent?: T;
+  form?: T;
+  featureCards?:
+    | T
+    | {
+        text?: T;
+        media?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1339,6 +1381,7 @@ export interface TravelPackagesBlockSelect<T extends boolean = true> {
  */
 export interface HeroSupportBlockSelect<T extends boolean = true> {
   title?: T;
+  form?: T;
   featureCards?:
     | T
     | {
@@ -1662,21 +1705,21 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: number;
-  logo: number | Media;
-  /**
-   * Menu items will be localized based on the selected language
-   */
-  menuItems: {
-    /**
-     * The text that will appear in the menu (will be localized)
-     */
-    label: string;
-    /**
-     * Use relative paths (e.g., "/about", "/services")
-     */
-    link: string;
-    id?: string | null;
-  }[];
+  navItems?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: {
+            relationTo: 'pages';
+            value: number | Page;
+          } | null;
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1709,12 +1752,18 @@ export interface Footer {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
-  logo?: T;
-  menuItems?:
+  navItems?:
     | T
     | {
-        label?: T;
-        link?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
         id?: T;
       };
   updatedAt?: T;

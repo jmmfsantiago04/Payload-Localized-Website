@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import RichText from '@/components/RichText'
-import { Button } from '@/components/ui/button'
 
 import { buildInitialFormState } from './buildInitialFormState'
 import { fields } from './fields'
@@ -21,6 +20,10 @@ export interface Data {
   [key: string]: Property | Property[]
 }
 
+type LocalizedMessage = {
+  [key: string]: string
+}
+
 export type FormBlockType = {
   blockName?: string
   blockType?: 'formBlock'
@@ -29,6 +32,8 @@ export type FormBlockType = {
   introContent?: {
     [k: string]: unknown
   }[]
+  locale?: string
+  confirmationMessage?: string | LocalizedMessage | null
 }
 
 export const FormBlock: React.FC<
@@ -39,8 +44,9 @@ export const FormBlock: React.FC<
   const {
     enableIntro,
     form: formFromProps,
-    form: { id: formID, confirmationMessage, confirmationType, redirect, submitButtonLabel } = {},
+    form: { id: formID, confirmationMessage, confirmationType, redirect } = {},
     introContent,
+    locale = 'en'
   } = props
 
   const formMethods = useForm({
@@ -58,6 +64,14 @@ export const FormBlock: React.FC<
   const [error, setError] = useState<{ message: string; status?: string } | undefined>()
   const router = useRouter()
   const t = useTranslations()
+
+  // Get localized messages
+  const localizedConfirmationMessage = confirmationMessage && typeof confirmationMessage === 'object'
+    ? (confirmationMessage[locale] || confirmationMessage['en'] || Object.values(confirmationMessage)[0])
+    : confirmationMessage
+
+  const localizedLoadingText = locale === 'ko' ? '로딩 중...' : 'Loading...'
+  const localizedErrorText = locale === 'ko' ? '문제가 발생했습니다.' : 'Something went wrong.'
 
   const onSubmit = useCallback(
     (data: Data) => {
@@ -80,6 +94,7 @@ export const FormBlock: React.FC<
             body: JSON.stringify({
               form: formID,
               submissionData: dataToSend,
+              locale: locale
             }),
             headers: {
               'Content-Type': 'application/json',
@@ -95,7 +110,7 @@ export const FormBlock: React.FC<
             setIsLoading(false)
 
             setError({
-              message: res.errors?.[0]?.message || 'Internal Server Error',
+              message: res.errors?.[0]?.message || (locale === 'ko' ? '서버 오류' : 'Internal Server Error'),
               status: res.status,
             })
 
@@ -107,64 +122,69 @@ export const FormBlock: React.FC<
 
           if (confirmationType === 'redirect' && redirect) {
             const { url } = redirect
-
             const redirectUrl = url
-
             if (redirectUrl) router.push(redirectUrl)
           }
         } catch (err) {
           console.warn(err)
           setIsLoading(false)
           setError({
-            message: 'Something went wrong.',
+            message: localizedErrorText,
           })
         }
       }
 
       void submitForm()
     },
-    [router, formID, redirect, confirmationType],
+    [router, formID, redirect, confirmationType, locale, localizedErrorText],
   )
 
   return (
-    <div className="container lg:max-w-[48rem] pb-20">
+    <div className="container max-w-full lg:max-w-[48rem] pb-20">
       <FormProvider {...formMethods}>
         {enableIntro && introContent && !hasSubmitted && (
           <RichText className="mb-8" content={introContent} enableGutter={false} />
         )}
-        {!isLoading && hasSubmitted && confirmationType === 'message' && (
-          <RichText content={confirmationMessage} />
+        {!isLoading && hasSubmitted && confirmationType === 'message' && localizedConfirmationMessage && (
+          <RichText content={localizedConfirmationMessage} />
         )}
-        {isLoading && !hasSubmitted && <p>{t('loading')}</p>}
-        {error && <div>{`${error.status || '500'}: ${error.message || ''}`}</div>}
+        {isLoading && !hasSubmitted && <p>{localizedLoadingText}</p>}
+        {error && <div className="text-red-500">{`${error.status || '500'}: ${error.message || ''}`}</div>}
         {!hasSubmitted && (
-          <form id={formID} onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-4 last:mb-0">
-              {formFromProps &&
-                formFromProps.fields &&
-                formFromProps.fields?.map((field, index) => {
-                  const Field: React.FC<any> = fields?.[field.blockType]
-                  if (Field) {
-                    return (
-                      <div className="mb-6 last:mb-0" key={index}>
-                        <Field
-                          form={formFromProps}
-                          {...field}
-                          {...formMethods}
-                          control={control}
-                          errors={errors}
-                          register={register}
-                        />
-                      </div>
-                    )
-                  }
-                  return null
-                })}
+          <form id={formID} onSubmit={handleSubmit(onSubmit)} className="bg-[#F5F9FF] rounded-lg p-4 sm:p-5 md:p-6 shadow-sm relative w-full max-w-[800px] mx-auto">
+            <div
+              className="absolute inset-0 opacity-10 rounded-lg"
+              style={{
+                backgroundImage: 'url("/images/topography.svg")',
+                backgroundRepeat: 'repeat',
+                backgroundSize: '500px'
+              }}
+            />
+            <div className="relative z-10">
+              <div className="space-y-4 sm:space-y-5 md:space-y-6">
+                {formFromProps &&
+                  formFromProps.fields &&
+                  formFromProps.fields?.map((field, index) => {
+                    const Field: React.FC<any> = fields?.[field.blockType]
+                    if (Field) {
+                      return (
+                        <div key={index} className="w-full max-w-[600px] mx-auto px-2 sm:px-4 md:px-6">
+                          <Field
+                            form={formFromProps}
+                            {...field}
+                            {...formMethods}
+                            control={control}
+                            errors={errors}
+                            register={register}
+                            locale={locale}
+                          />
+                        </div>
+                      )
+                    }
+                    return null
+                  })}
+              </div>
             </div>
-
-            <Button form={formID} type="submit" variant="default">
-              {submitButtonLabel}
-            </Button>
           </form>
         )}
       </FormProvider>
