@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from 'src/utilities/cn'
-import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import React, { useState, useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import Image from 'next/image'
 import type { Page } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
@@ -40,13 +40,22 @@ export const Component: React.FC<Props> = (props) => {
     const { title, content, secondaryContent, cards, buttons, media, locale } = props
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
+    const titleRef = useRef(null)
+    const buttonsRef = useRef(null)
+    const mediaRef = useRef(null)
+
+    const isTitleInView = useInView(titleRef, { once: true })
+    const isButtonsInView = useInView(buttonsRef, { once: true })
+    const isMediaInView = useInView(mediaRef, { once: true })
+
     return (
         <section className="relative flex justify-center w-full px-3 xs:px-4 sm:px-6 lg:px-8 bg-[#F5F9FF]">
             <div className="relative w-full max-w-7xl py-12 xs:py-16 sm:py-20 lg:py-24">
                 {/* Title Section */}
                 <motion.div
+                    ref={titleRef}
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                     transition={{ duration: 0.8 }}
                     className={`text-center ${locale === 'ko' ? 'mb-[2rem] xs:mb-[2.5rem]' : 'mb-8 xs:mb-12 sm:mb-16'}`}
                 >
@@ -81,72 +90,84 @@ export const Component: React.FC<Props> = (props) => {
 
                 {/* FAQ Cards */}
                 <div className="flex flex-col space-y-[1rem] sm:space-y-[1.25rem] max-w-[47.375rem] mx-auto px-3 xs:px-4 sm:px-6 lg:px-0">
-                    {cards?.map((card, index) => (
-                        <motion.div
-                            key={card.id || index}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
-                            className="w-full"
-                        >
-                            <button
-                                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                                className="flex items-center justify-between w-full min-h-[4rem] xs:min-h-[5rem] py-[1rem] xs:py-[1.5rem] px-[0.75rem] xs:px-[1rem] bg-white rounded-[1rem] xs:rounded-[1.375rem] text-left hover:bg-gray-50 transition-colors border border-[#E5E7EB] gap-[0.75rem] xs:gap-[1.25rem]"
-                            >
-                                <span className="text-[0.875rem] xs:text-[1rem] font-medium leading-[1.4] xs:leading-[1.5] tracking-[0%] text-[#262626]">
-                                    {card.title}
-                                </span>
-                                <span className="flex-shrink-0">
-                                    <motion.div
-                                        className="flex items-center justify-center w-[1.75rem] h-[1.75rem] xs:w-[2rem] xs:h-[2rem] rounded-full bg-[#1976D2]"
-                                    >
-                                        <motion.svg
-                                            width="10"
-                                            height="10"
-                                            viewBox="0 0 10 10"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            animate={{ rotate: openIndex === index ? 45 : 0 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            <path
-                                                d="M5 2V8M2 5H8"
-                                                stroke="white"
-                                                strokeWidth="1.5"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </motion.svg>
-                                    </motion.div>
-                                </span>
-                            </button>
+                    {cards?.map((card, index) => {
+                        const cardRef = useRef<HTMLDivElement | null>(null);
+                        const isCardInView = useInView(cardRef, { once: true });
+
+                        return (
                             <motion.div
-                                initial={false}
-                                animate={{
-                                    height: openIndex === index ? 'auto' : 0,
-                                    opacity: openIndex === index ? 1 : 0
-                                }}
-                                transition={{ duration: 0.3 }}
-                                className="overflow-hidden bg-white rounded-b-[1rem] xs:rounded-b-[1.25rem]"
+                                key={card.id || index}
+                                ref={cardRef}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={isCardInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                className="w-full"
                             >
-                                <div className="p-4 xs:p-6 pt-0">
-                                    {card.content?.map((contentItem, contentIndex) => (
-                                        <p
-                                            key={contentIndex}
-                                            className="text-[0.8125rem] xs:text-[0.875rem] sm:text-[1rem] text-[#262626]/80 leading-[1.6]"
+                                <button
+                                    onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                                    className="flex items-center justify-between w-full min-h-[4rem] xs:min-h-[5rem] py-[1rem] xs:py-[1.5rem] px-[0.75rem] xs:px-[1rem] bg-white rounded-[1rem] xs:rounded-[1.375rem] text-left hover:bg-gray-50 transition-colors border border-[#E5E7EB] gap-[0.75rem] xs:gap-[1.25rem]"
+                                >
+                                    <span className="text-[0.875rem] xs:text-[1rem] font-medium leading-[1.4] xs:leading-[1.5] tracking-[0%] text-[#262626]">
+                                        {card.title}
+                                    </span>
+                                    <span className="flex-shrink-0">
+                                        <motion.div
+                                            className="flex items-center justify-center w-[1.75rem] h-[1.75rem] xs:w-[2rem] xs:h-[2rem] rounded-full bg-[#1976D2]"
                                         >
-                                            {contentItem.text}
-                                        </p>
-                                    ))}
-                                </div>
+                                            <motion.svg
+                                                width="10"
+                                                height="10"
+                                                viewBox="0 0 10 10"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                animate={{ rotate: openIndex === index ? 45 : 0 }}
+                                                transition={{ duration: 0.2 }}
+                                            >
+                                                <path
+                                                    d="M5 2V8M2 5H8"
+                                                    stroke="white"
+                                                    strokeWidth="1.5"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </motion.svg>
+                                        </motion.div>
+                                    </span>
+                                </button>
+                                <motion.div
+                                    initial={false}
+                                    animate={{
+                                        height: openIndex === index ? 'auto' : 0,
+                                        opacity: openIndex === index ? 1 : 0
+                                    }}
+                                    transition={{ duration: 0.3 }}
+                                    className="overflow-hidden bg-white rounded-b-[1rem] xs:rounded-b-[1.25rem]"
+                                >
+                                    <div className="p-4 xs:p-6 pt-0">
+                                        {card.content?.map((contentItem, contentIndex) => (
+                                            <p
+                                                key={contentIndex}
+                                                className="text-[0.8125rem] xs:text-[0.875rem] sm:text-[1rem] text-[#262626]/80 leading-[1.6]"
+                                            >
+                                                {contentItem.text}
+                                            </p>
+                                        ))}
+                                    </div>
+                                </motion.div>
                             </motion.div>
-                        </motion.div>
-                    ))}
+                        );
+                    })}
                 </div>
 
                 {/* Buttons */}
                 {buttons && buttons.length > 0 && (
-                    <div className="flex flex-wrap gap-4 justify-center mt-12">
+                    <motion.div
+                        ref={buttonsRef}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={isButtonsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                        className="flex flex-wrap gap-4 justify-center mt-12"
+                    >
                         {buttons.map((button, index) => (
                             <CMSLink
                                 key={index}
@@ -156,12 +177,18 @@ export const Component: React.FC<Props> = (props) => {
                                 {button.label}
                             </CMSLink>
                         ))}
-                    </div>
+                    </motion.div>
                 )}
 
                 {/* Media */}
                 {media && typeof media !== 'number' && media.url && (
-                    <div className="relative w-full max-w-[800px] mx-auto aspect-video rounded-xl overflow-hidden mt-12">
+                    <motion.div
+                        ref={mediaRef}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={isMediaInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                        className="relative w-full max-w-[800px] mx-auto aspect-video rounded-xl overflow-hidden mt-12"
+                    >
                         <Image
                             src={media.url}
                             alt={media.alt || ''}
@@ -169,7 +196,7 @@ export const Component: React.FC<Props> = (props) => {
                             className="object-cover"
                             priority
                         />
-                    </div>
+                    </motion.div>
                 )}
             </div>
         </section>

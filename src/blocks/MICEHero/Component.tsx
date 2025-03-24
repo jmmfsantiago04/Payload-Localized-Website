@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from 'src/utilities/cn'
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import Image from 'next/image'
 import type { Page } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
@@ -40,6 +40,16 @@ type Props = {
 export const Component: React.FC<Props> = (props) => {
     const { title, content, secondaryContent, cards, buttons, media, locale } = props
 
+    const titleRef = useRef(null)
+    const contentRef = useRef(null)
+    const buttonsRef = useRef(null)
+    const mediaRef = useRef(null)
+
+    const isTitleInView = useInView(titleRef, { once: true })
+    const isContentInView = useInView(contentRef, { once: true })
+    const isButtonsInView = useInView(buttonsRef, { once: true })
+    const isMediaInView = useInView(mediaRef, { once: true })
+
     return (
         <section className="relative flex justify-center w-full px-4 sm:px-6 lg:px-8 bg-white">
             <style jsx>{`
@@ -52,8 +62,9 @@ export const Component: React.FC<Props> = (props) => {
             `}</style>
             <div className="relative w-full max-w-7xl py-4 sm:py-6 lg:py-8">
                 <motion.div
+                    ref={titleRef}
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                     transition={{ duration: 0.8 }}
                     className="text-center"
                 >
@@ -77,24 +88,30 @@ export const Component: React.FC<Props> = (props) => {
                     {/* Statistics Cards */}
                     {cards && cards.length > 0 && (
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-16 sm:gap-16 lg:gap-[120px] max-w-[348px] sm:max-w-[720px] lg:max-w-[1112px] mx-auto">
-                            {cards.map((card, index) => (
-                                <motion.div
-                                    key={card.id || index}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                                    className="flex flex-col items-center gap-4 sm:gap-5 lg:gap-6"
-                                >
-                                    <span className="gradient-text text-[3rem] sm:text-[3.5rem] lg:text-[4rem] font-bold leading-none">
-                                        {card.title?.startsWith('+') ? card.title : `+${card.title}`}
-                                    </span>
-                                    {card.content && card.content.map((contentItem, i) => (
-                                        <p key={contentItem.id || i} className="text-[16px] sm:text-[18px] lg:text-[20px] font-medium leading-[22px] sm:leading-[25px] lg:leading-[28px] tracking-[0%] text-center align-middle text-[#475467] max-w-full sm:max-w-[280px] lg:max-w-[348px] px-4 sm:px-2 lg:px-0">
-                                            {contentItem.text}
-                                        </p>
-                                    ))}
-                                </motion.div>
-                            ))}
+                            {cards.map((card, index) => {
+                                const cardRef = useRef<HTMLDivElement | null>(null);
+                                const isCardInView = useInView(cardRef, { once: true });
+
+                                return (
+                                    <motion.div
+                                        key={card.id || index}
+                                        ref={cardRef}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={isCardInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                                        className="flex flex-col items-center gap-4 sm:gap-5 lg:gap-6"
+                                    >
+                                        <span className="gradient-text text-[3rem] sm:text-[3.5rem] lg:text-[4rem] font-bold leading-none">
+                                            {card.title?.startsWith('+') ? card.title : `+${card.title}`}
+                                        </span>
+                                        {card.content && card.content.map((contentItem, i) => (
+                                            <p key={contentItem.id || i} className="text-[16px] sm:text-[18px] lg:text-[20px] font-medium leading-[22px] sm:leading-[25px] lg:leading-[28px] tracking-[0%] text-center align-middle text-[#475467] max-w-full sm:max-w-[280px] lg:max-w-[348px] px-4 sm:px-2 lg:px-0">
+                                                {contentItem.text}
+                                            </p>
+                                        ))}
+                                    </motion.div>
+                                );
+                            })}
                         </div>
                     )}
 
@@ -104,8 +121,9 @@ export const Component: React.FC<Props> = (props) => {
                             {/* Button */}
                             {buttons && buttons.length > 0 && (
                                 <motion.div
+                                    ref={buttonsRef}
                                     initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    animate={isButtonsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                                     transition={{ duration: 0.8, delay: 0.4 }}
                                     className="w-full md:w-auto"
                                 >
@@ -147,9 +165,10 @@ export const Component: React.FC<Props> = (props) => {
                             {/* Content */}
                             {content && (
                                 <motion.div
+                                    ref={contentRef}
                                     className="w-full md:w-[361px] md:ml-auto"
                                     initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    animate={isContentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
                                 >
                                     <p className="text-base font-medium leading-6 text-[#475467] text-center md:text-left">
@@ -163,8 +182,9 @@ export const Component: React.FC<Props> = (props) => {
                     {/* Media Container */}
                     {media && typeof media !== 'number' && media.url && (
                         <motion.div
+                            ref={mediaRef}
                             initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            animate={isMediaInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
                             className="relative mt-12 sm:mt-16 lg:mt-20 rounded-2xl border border-[#EAECF0] overflow-hidden w-full aspect-[2.017]"
                         >

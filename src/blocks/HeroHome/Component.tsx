@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from 'src/utilities/cn'
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import Image from 'next/image'
 import type { Page } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
@@ -40,6 +40,16 @@ type Props = {
 export const Component: React.FC<Props> = (props) => {
     const { title, content, secondaryContent, cards, buttons, media, locale } = props
 
+    const titleRef = useRef(null)
+    const contentRef = useRef(null)
+    const buttonRef = useRef(null)
+    const mediaRef = useRef(null)
+
+    const isTitleInView = useInView(titleRef, { once: true })
+    const isContentInView = useInView(contentRef, { once: true })
+    const isButtonInView = useInView(buttonRef, { once: true })
+    const isMediaInView = useInView(mediaRef, { once: true })
+
     const getTitleContent = () => {
         if (!title) return null;
 
@@ -76,14 +86,14 @@ export const Component: React.FC<Props> = (props) => {
                     {/* Title and Content Container */}
                     <div className="flex flex-col space-y-8">
                         {/* Title */}
-                        <div className="max-w-[756px]">
+                        <div className="max-w-[756px]" ref={titleRef}>
                             <motion.h1
                                 className={`text-[2rem] sm:text-[2.5rem] md:text-[3.25rem] leading-[2.5rem] sm:leading-[3rem] md:leading-[3.875rem] tracking-[-0.02em] font-semibold ${locale === 'ko'
                                     ? 'h-full flex items-center'
                                     : 'flex flex-row items-start gap-1 md:gap-2'
                                     }`}
                                 initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
+                                animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                                 transition={{ duration: 0.8 }}
                             >
                                 {getTitleContent()}
@@ -94,8 +104,9 @@ export const Component: React.FC<Props> = (props) => {
                         <div className="flex flex-col-reverse gap-8 md:flex-row md:items-start md:justify-between">
                             {/* Button */}
                             <motion.div
+                                ref={buttonRef}
                                 initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
+                                animate={isButtonInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                                 transition={{ duration: 0.8, delay: 0.4 }}
                                 className="md:w-auto"
                             >
@@ -138,9 +149,10 @@ export const Component: React.FC<Props> = (props) => {
                             {/* Content */}
                             {content && (
                                 <motion.div
+                                    ref={contentRef}
                                     className="w-full md:w-[361px] md:ml-auto"
                                     initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    animate={isContentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
                                 >
                                     <p className="text-base font-medium leading-6 text-[#475467]">
@@ -154,8 +166,9 @@ export const Component: React.FC<Props> = (props) => {
                     {/* Media Container */}
                     {media && typeof media !== 'number' && media.url && (
                         <motion.div
+                            ref={mediaRef}
                             initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            animate={isMediaInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
                             className="relative mt-8 rounded-2xl border border-[#EAECF0] overflow-hidden w-full aspect-[2.017]"
                         >

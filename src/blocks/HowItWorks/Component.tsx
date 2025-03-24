@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from 'src/utilities/cn'
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import Image from 'next/image'
 import type { Page } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
@@ -33,6 +33,14 @@ type Props = {
 
 const HowItWorksBlock: React.FC<Props> = (props) => {
     const { id, title, content, secondaryContent, cards = [], buttons = [], media, locale } = props
+
+    const labelRef = useRef(null)
+    const mediaRef = useRef(null)
+    const buttonRef = useRef(null)
+
+    const isLabelInView = useInView(labelRef, { once: true })
+    const isMediaInView = useInView(mediaRef, { once: true })
+    const isButtonInView = useInView(buttonRef, { once: true })
 
     // Function to format the main content with highlighted words
     const formatContent = (text: string = '') => {
@@ -69,8 +77,9 @@ const HowItWorksBlock: React.FC<Props> = (props) => {
             <div className="mx-auto w-full max-w-7xl">
                 {/* Label and Content */}
                 <motion.div
+                    ref={labelRef}
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    animate={isLabelInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                     transition={{ duration: 0.8 }}
                     className="text-center mb-8 sm:mb-12 md:mb-16"
                 >
@@ -81,7 +90,7 @@ const HowItWorksBlock: React.FC<Props> = (props) => {
                     </div>
                     <div className="w-full sm:w-[37.5rem] md:w-[49.75rem] h-auto sm:h-[5rem] md:h-[6rem] mx-auto px-4 sm:px-0">
                         <h2 className="text-[1.5rem] sm:text-[2rem] md:text-[2.5rem] leading-[2rem] sm:leading-[2.5rem] md:leading-[3rem] tracking-[0] font-semibold text-gray-900 text-center">
-                            {formatContent(content)}
+                            {formatContent(content || '')}
                         </h2>
                     </div>
                     {secondaryContent && (
@@ -99,8 +108,9 @@ const HowItWorksBlock: React.FC<Props> = (props) => {
                     {/* Image Container */}
                     {media?.url && (
                         <motion.div
+                            ref={mediaRef}
                             initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
+                            animate={isMediaInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
                             transition={{ duration: 0.8 }}
                             className="relative flex-shrink-0 w-full max-w-[512px] h-[280px] md:h-[340px] mt-4 lg:mt-0"
                         >
@@ -118,42 +128,49 @@ const HowItWorksBlock: React.FC<Props> = (props) => {
                     {cards && cards.length > 0 && (
                         <div className="flex flex-col w-full lg:max-w-[35rem]">
                             <div className="flex flex-col gap-4 sm:gap-6 w-full">
-                                {cards.map((card, index) => (
-                                    <motion.div
-                                        key={card.id || index}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.8, delay: index * 0.1 }}
-                                        className={`w-full min-h-[8.75rem] sm:min-h-[10rem] md:h-[11.5rem] ${index === 2 ? 'bg-white' : 'bg-[#1976D226]'} rounded-tl-xl rounded-tr-xl rounded-bl-xl sm:rounded-tl-2xl sm:rounded-tr-2xl sm:rounded-bl-2xl p-4 sm:p-6 md:p-8 border border-[#E5E7EB]`}
-                                    >
-                                        <div className="flex flex-col">
-                                            <div className="flex items-center gap-3 sm:gap-4 pb-4">
-                                                <div className={`flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 ${index === 2 ? 'bg-[#FAFAFA]/50' : 'bg-white'} rounded-full flex items-center justify-center`}>
-                                                    <span className="text-[#1976D2] text-sm sm:text-base md:text-xl font-semibold">
-                                                        {index + 1}
-                                                    </span>
+                                {cards.map((card, index) => {
+                                    const cardRef = useRef<HTMLDivElement | null>(null);
+                                    const isCardInView = useInView(cardRef, { once: true });
+
+                                    return (
+                                        <motion.div
+                                            key={card.id || index}
+                                            ref={cardRef}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={isCardInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                                            transition={{ duration: 0.8, delay: index * 0.1 }}
+                                            className={`w-full min-h-[8.75rem] sm:min-h-[10rem] md:h-[11.5rem] ${index === 2 ? 'bg-white' : 'bg-[#1976D226]'} rounded-tl-xl rounded-tr-xl rounded-bl-xl sm:rounded-tl-2xl sm:rounded-tr-2xl sm:rounded-bl-2xl p-4 sm:p-6 md:p-8 border border-[#E5E7EB]`}
+                                        >
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center gap-3 sm:gap-4 pb-4">
+                                                    <div className={`flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 ${index === 2 ? 'bg-[#FAFAFA]/50' : 'bg-white'} rounded-full flex items-center justify-center`}>
+                                                        <span className="text-[#1976D2] text-sm sm:text-base md:text-xl font-semibold">
+                                                            {index + 1}
+                                                        </span>
+                                                    </div>
+                                                    <h3 className="text-[#1976D2] text-[1rem] sm:text-[1.125rem] md:text-[1.25rem] leading-[1.5rem] sm:leading-[1.625rem] md:leading-[1.75rem] tracking-[0] font-semibold align-middle">
+                                                        {card.title}
+                                                    </h3>
                                                 </div>
-                                                <h3 className="text-[#1976D2] text-[1rem] sm:text-[1.125rem] md:text-[1.25rem] leading-[1.5rem] sm:leading-[1.625rem] md:leading-[1.75rem] tracking-[0] font-semibold align-middle">
-                                                    {card.title}
-                                                </h3>
+                                                <div className="pl-2">
+                                                    {card.content?.map((item, contentIndex) => (
+                                                        <p key={contentIndex} className="text-[#1976D2] text-[0.875rem] sm:text-[0.9375rem] md:text-[1rem] leading-[1.25rem] sm:leading-[1.375rem] md:leading-[1.5rem] tracking-[0] font-medium align-left">
+                                                            {item.text}
+                                                        </p>
+                                                    ))}
+                                                </div>
                                             </div>
-                                            <div className="pl-2">
-                                                {card.content?.map((item, contentIndex) => (
-                                                    <p key={contentIndex} className="text-[#1976D2] text-[0.875rem] sm:text-[0.9375rem] md:text-[1rem] leading-[1.25rem] sm:leading-[1.375rem] md:leading-[1.5rem] tracking-[0] font-medium align-left">
-                                                        {item.text}
-                                                    </p>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                ))}
+                                        </motion.div>
+                                    );
+                                })}
                             </div>
 
                             {/* Action Button */}
                             {buttons && buttons.length > 0 && (
                                 <motion.div
+                                    ref={buttonRef}
                                     initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    animate={isButtonInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                                     transition={{ duration: 0.8, delay: 0.3 }}
                                     className="w-full mt-6 flex justify-center lg:justify-start"
                                 >
@@ -172,7 +189,7 @@ const HowItWorksBlock: React.FC<Props> = (props) => {
                                                             ) : (
                                                                 word
                                                             )}
-                                                            {index < buttons[0].label?.split(' ').length - 1 ? ' ' : ''}
+                                                            {index < (buttons[0].label?.split(' ').length || 0) - 1 ? ' ' : ''}
                                                         </React.Fragment>
                                                     ))}
                                                 </>

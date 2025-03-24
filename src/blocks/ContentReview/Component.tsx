@@ -1,8 +1,8 @@
 'use client'
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { CMSLink } from '@/components/Link'
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 
 type Props = {
   id?: string
@@ -25,6 +25,12 @@ type Props = {
 const ContentReviewBlock: React.FC<Props> = (props) => {
   const { id, title, description, reviews = [], buttons, locale } = props
 
+  const headerRef = useRef(null)
+  const buttonsRef = useRef(null)
+
+  const isHeaderInView = useInView(headerRef, { once: true })
+  const isButtonsInView = useInView(buttonsRef, { once: true })
+
   // Create a longer sequence of reviews for smoother infinite scroll
   const duplicatedReviews = [...reviews, ...reviews, ...reviews, ...reviews]
 
@@ -33,8 +39,9 @@ const ContentReviewBlock: React.FC<Props> = (props) => {
       <div className="mx-auto w-full max-w-7xl">
         {/* Title and Description */}
         <motion.div
+          ref={headerRef}
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8 }}
           className="text-center mb-8 sm:mb-12 md:mb-16"
         >
@@ -158,8 +165,9 @@ const ContentReviewBlock: React.FC<Props> = (props) => {
         {/* Action Buttons */}
         {buttons && buttons.length > 0 && (
           <motion.div
+            ref={buttonsRef}
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={isButtonsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="flex flex-wrap justify-center gap-4 mt-6 sm:mt-8 md:mt-12"
           >

@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import type { TypedLocale } from 'payload'
 
@@ -20,12 +20,16 @@ type Props = {
 export const Component: React.FC<Props> = (props) => {
     const { title, content, secondaryContent, buttons, locale } = props
 
+    const contentRef = useRef(null)
+    const isContentInView = useInView(contentRef, { once: true })
+
     return (
         <section className="relative mt-[40px] sm:mt-[60px] lg:mt-[80px] flex justify-center w-full px-4 sm:px-6 lg:px-0">
             <div className="relative flex items-center justify-center w-full lg:w-[1232px] min-h-[279px] bg-[#1B365D] rounded-t-[20px]">
                 <motion.div
+                    ref={contentRef}
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    animate={isContentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                     transition={{ duration: 0.8 }}
                     className="flex flex-col items-center justify-center w-full h-full py-8 sm:py-10 lg:py-12"
                 >

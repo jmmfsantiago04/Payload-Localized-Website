@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import React, { useState, useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Media } from '@/payload-types'
@@ -39,6 +39,16 @@ export const Component: React.FC<Props> = (props) => {
     const { title, content, secondaryContent, cards = [], buttons = [] } = props
     const [currentCardIndex, setCurrentCardIndex] = useState(0)
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0)
+
+    const headerRef = useRef(null)
+    const cardRef = useRef(null)
+    const mediaRef = useRef(null)
+    const buttonsRef = useRef(null)
+
+    const isHeaderInView = useInView(headerRef, { once: true })
+    const isCardInView = useInView(cardRef, { once: true })
+    const isMediaInView = useInView(mediaRef, { once: true })
+    const isButtonsInView = useInView(buttonsRef, { once: true })
 
     // Function to handle card navigation
     const handleCardNavigation = (direction: 'prev' | 'next') => {
@@ -83,8 +93,9 @@ export const Component: React.FC<Props> = (props) => {
             <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
                 <motion.div
+                    ref={headerRef}
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                     transition={{ duration: 0.8 }}
                     className="text-center mb-8 sm:mb-12 md:mb-16 pt-[50px]"
                 >
@@ -118,8 +129,9 @@ export const Component: React.FC<Props> = (props) => {
                     {cards && cards.length > 0 && cards[currentCardIndex] && (
                         <motion.div
                             key={currentCardIndex}
+                            ref={cardRef}
                             initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
+                            animate={isCardInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
                             exit={{ opacity: 0, x: -50 }}
                             transition={{ duration: 0.4 }}
                             className="relative bg-white overflow-hidden w-[372px] h-[484.89px] border border-gray-200 rounded-[20px] pt-[16px] pr-[24px] pb-[24px] pl-[24px] mb-4 lg:mb-0"
@@ -215,7 +227,13 @@ export const Component: React.FC<Props> = (props) => {
                         props.mediaGallery.length > 0 &&
                         props.mediaGallery[currentMediaIndex] &&
                         props.mediaGallery[currentMediaIndex].media?.url && (
-                            <div className="relative w-full lg:w-[792px] h-[485px] rounded-[20px] overflow-hidden">
+                            <motion.div
+                                ref={mediaRef}
+                                initial={{ opacity: 0, x: -50 }}
+                                animate={isMediaInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+                                transition={{ duration: 0.4 }}
+                                className="relative w-full lg:w-[792px] h-[485px] rounded-[20px] overflow-hidden"
+                            >
                                 <Image
                                     key={currentMediaIndex}
                                     src={props.mediaGallery[currentMediaIndex].media.url}
@@ -254,13 +272,20 @@ export const Component: React.FC<Props> = (props) => {
                                         </svg>
                                     </button>
                                 </div>
-                            </div>
+                            </motion.div>
                         )}
                 </div>
 
                 {/* Buttons Section */}
                 {buttons && buttons.length > 0 && (
-                    <div className="relative w-full max-w-[1174px] mx-auto" style={{ marginTop: '20px' }}>
+                    <motion.div
+                        ref={buttonsRef}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={isButtonsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="relative w-full max-w-[1174px] mx-auto"
+                        style={{ marginTop: '20px' }}
+                    >
                         <div className="absolute right-0">
                             {buttons.map((button, index) => (
                                 <button
@@ -272,7 +297,7 @@ export const Component: React.FC<Props> = (props) => {
                                 </button>
                             ))}
                         </div>
-                    </div>
+                    </motion.div>
                 )}
 
                 {/* Navigation Arrows */}

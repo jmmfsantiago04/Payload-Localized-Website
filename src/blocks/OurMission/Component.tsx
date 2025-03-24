@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from 'src/utilities/cn'
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useRef, useEffect, useState } from 'react'
+import { motion, useInView } from 'framer-motion'
 import Image from 'next/image'
 import type { Page } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
@@ -37,6 +37,19 @@ type Props = {
 export const Component: React.FC<Props> = (props) => {
   const { title, content, secondaryContent, cards, buttons, media } = props
 
+  const labelRef = useRef(null)
+  const buttonsRef = useRef(null)
+  const mediaRef = useRef(null)
+  const [cardRefs, setCardRefs] = useState<Array<HTMLDivElement | null>>([])
+
+  useEffect(() => {
+    setCardRefs(new Array(cards?.length || 0).fill(null))
+  }, [cards?.length])
+
+  const isLabelInView = useInView(labelRef, { once: true })
+  const isButtonsInView = useInView(buttonsRef, { once: true })
+  const isMediaInView = useInView(mediaRef, { once: true })
+
   // Function to add line break after "and"
   const formatContent = (text: string) => {
     return text.split(' and ').map((part, index, array) => (
@@ -57,8 +70,9 @@ export const Component: React.FC<Props> = (props) => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Label and Content */}
         <motion.div
+          ref={labelRef}
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={isLabelInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8 }}
           className="text-center mb-8 sm:mb-12 md:mb-16"
         >
@@ -88,38 +102,50 @@ export const Component: React.FC<Props> = (props) => {
         {/* Cards Grid */}
         {cards && cards.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 justify-items-center">
-            {cards.map((card, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                className="w-full max-w-[23.4375rem] h-[18.75rem] sm:h-[20rem] md:h-[21.25rem] bg-[#1B365C] rounded-tl-xl rounded-tr-xl rounded-bl-xl sm:rounded-tl-2xl sm:rounded-tr-2xl sm:rounded-bl-2xl p-6 sm:p-7 md:p-8 text-white border border-[#1B365C] flex flex-col"
-              >
-                {card.title && (
-                  <h3 className="text-[1rem] sm:text-[1.0625rem] md:text-[1.125rem] leading-[1.5rem] sm:leading-[1.625rem] md:leading-[1.75rem] tracking-[0] font-semibold mb-4 align-middle">
-                    {card.title}
-                  </h3>
-                )}
-                {card.content && card.content.length > 0 && (
-                  <div className="space-y-4">
-                    {card.content.map((contentItem, contentIndex) => (
-                      <p
-                        key={contentIndex}
-                        className="text-[0.875rem] sm:text-[0.9375rem] md:text-[1rem] leading-[1.25rem] sm:leading-[1.375rem] md:leading-[1.5rem] tracking-[0] font-medium text-white/80"
-                      >
-                        {contentItem.text}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </motion.div>
-            ))}
+            {cards.map((card, index) => {
+              const cardRef = useRef<HTMLDivElement | null>(null);
+              const isCardInView = useInView(cardRef, { once: true });
+
+              return (
+                <motion.div
+                  key={index}
+                  ref={cardRef}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isCardInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  transition={{ duration: 0.8, delay: index * 0.1 }}
+                  className="w-full max-w-[23.4375rem] h-[18.75rem] sm:h-[20rem] md:h-[21.25rem] bg-[#1B365C] rounded-tl-xl rounded-tr-xl rounded-bl-xl sm:rounded-tl-2xl sm:rounded-tr-2xl sm:rounded-bl-2xl p-6 sm:p-7 md:p-8 text-white border border-[#1B365C] flex flex-col"
+                >
+                  {card.title && (
+                    <h3 className="text-[1rem] sm:text-[1.0625rem] md:text-[1.125rem] leading-[1.5rem] sm:leading-[1.625rem] md:leading-[1.75rem] tracking-[0] font-semibold mb-4 align-middle">
+                      {card.title}
+                    </h3>
+                  )}
+                  {card.content && card.content.length > 0 && (
+                    <div className="space-y-4">
+                      {card.content.map((contentItem, contentIndex) => (
+                        <p
+                          key={contentIndex}
+                          className="text-[0.875rem] sm:text-[0.9375rem] md:text-[1rem] leading-[1.25rem] sm:leading-[1.375rem] md:leading-[1.5rem] tracking-[0] font-medium text-white/80"
+                        >
+                          {contentItem.text}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
         )}
 
         {buttons && buttons.length > 0 && (
-          <div className="flex flex-wrap gap-4 justify-center mt-8">
+          <motion.div
+            ref={buttonsRef}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isButtonsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="flex flex-wrap gap-4 justify-center mt-8"
+          >
             {buttons.map((button, index) => (
               <CMSLink
                 key={index}
@@ -129,18 +155,24 @@ export const Component: React.FC<Props> = (props) => {
                 {button.label}
               </CMSLink>
             ))}
-          </div>
+          </motion.div>
         )}
 
         {media && typeof media !== 'number' && media.url && (
-          <div className="relative w-full aspect-video rounded-lg overflow-hidden mt-8">
+          <motion.div
+            ref={mediaRef}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isMediaInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="relative w-full aspect-video rounded-lg overflow-hidden mt-8"
+          >
             <Image
               src={media.url}
               alt={media.alt || ''}
               fill
               className="object-cover"
             />
-          </div>
+          </motion.div>
         )}
       </div>
     </section>

@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react'
+import React, { useRef } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import type { CardLabeled as CardLabeledType } from '@/payload-types'
 
 type Props = CardLabeledType & {
@@ -20,11 +20,15 @@ export const CardLabeledBlock: React.FC<Props> = (props) => {
             const card = cards?.[i % (cards?.length || 1)]; // Cycle through available cards if less than 6
             if (!card) return null;
 
+            const cardRef = useRef<HTMLDivElement | null>(null);
+            const isCardInView = useInView(cardRef, { once: true });
+
             return (
               <motion.div
                 key={`${card.id || i}-${i}`}
+                ref={cardRef}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                animate={isCardInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="flex flex-col w-[23rem] h-[19.0625rem] bg-white overflow-hidden"
               >
